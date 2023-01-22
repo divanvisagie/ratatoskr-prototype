@@ -1,5 +1,5 @@
 import nlp from 'compromise'
-import { Configuration, OpenAIApi } from 'openai'
+import { Configuration, ImagesResponseDataInner, OpenAIApi } from 'openai'
 
 const appiKey = process.env.OPENAI_API_KEY || ''
 
@@ -10,16 +10,7 @@ const openAi = new OpenAIApi(config)
 
 const model = 'text-davinci-003'
 
-export const createOpenAiService = () => {
-  const isQuestion = (text: string) => {
-    const questions = nlp(text).sentences().isQuestion().out('array')
-    if (questions.length > 0) {
-      return true
-    } else {
-      return false
-    }
-  }
-
+export const createOpenAiClient = () => {
   const getAnswer = async (question: string) => {
     const response = await openAi.createCompletion({
       prompt: `${question}`,
@@ -40,10 +31,25 @@ export const createOpenAiService = () => {
       return choices[0].text
     }
   }
+
+  const generateImage = async (
+    prompt: string
+  ): Promise<ImagesResponseDataInner | undefined> => {
+    const response = await openAi.createImage({
+      prompt,
+      n: 1,
+    })
+
+    const first = response.data.data[0]
+    console.log('openai generateImage >', first)
+
+    return first
+  }
+
   return {
     getAnswer,
-    isQuestion,
+    generateImage,
   }
 }
 
-export type OpenAiService = ReturnType<typeof createOpenAiService>
+export type OpenAiClient = ReturnType<typeof createOpenAiClient>

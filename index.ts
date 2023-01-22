@@ -1,12 +1,12 @@
 import TelegramBot from 'node-telegram-bot-api'
 import { createNotionService } from './services/NotionService'
-import { createOpenAiService } from './services/OpenAiService'
+import { createAiService } from './services/AiService'
 
 const token = process.env.TELEGRAM_BOT_TOKEN || ''
 const bot = new TelegramBot(token, { polling: true })
 
 const notionService = createNotionService()
-const openAiService = createOpenAiService()
+const aiService = createAiService()
 
 bot.onText(/\/start/, (msg: any) => {
   console.log('>>>', 'User started the bot')
@@ -33,8 +33,20 @@ bot.on('message', async (msg: TelegramBot.Message) => {
     return
   }
 
-  if (openAiService.isQuestion(msg.text)) {
-    const answer = await openAiService.getAnswer(msg.text)
+  if (aiService.isQuestion(msg.text)) {
+    if (aiService.isImageQuestion(msg.text)) {
+      const image = await aiService.getImage(msg.text)
+
+      if (image) {
+        bot.sendPhoto(msg.chat.id, image)
+        return
+      } else {
+        bot.sendMessage(msg.chat.id, 'I can not draw that.')
+      }
+      return
+    }
+
+    const answer = await aiService.getAnswer(msg.text)
     bot.sendMessage(
       msg.chat.id,
       answer || 'could not find an anwer from OpenAI'
