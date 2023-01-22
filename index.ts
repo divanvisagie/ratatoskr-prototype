@@ -1,10 +1,12 @@
 import TelegramBot from 'node-telegram-bot-api'
 import { createNotionService } from './services/NotionService'
+import { createOpenAiService } from './services/OpenAiService'
 
 const token = process.env.TELEGRAM_BOT_TOKEN || ''
 const bot = new TelegramBot(token, { polling: true })
 
 const notionService = createNotionService()
+const openAiService = createOpenAiService()
 
 bot.onText(/\/start/, (msg: any) => {
   console.log('>>>', 'User started the bot')
@@ -28,6 +30,15 @@ bot.on('message', async (msg: TelegramBot.Message) => {
 
   if (!msg.text) {
     bot.sendMessage(msg.chat.id, 'I can only accept text messages right now.')
+    return
+  }
+
+  if (openAiService.isQuestion(msg.text)) {
+    const answer = await openAiService.getAnswer(msg.text)
+    bot.sendMessage(
+      msg.chat.id,
+      answer || 'could not find an anwer from OpenAI'
+    )
     return
   }
 
