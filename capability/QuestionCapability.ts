@@ -11,7 +11,7 @@ type QAPair = {
 function buildContext(context: QAPair[]): string {
   let contextString = ''
   for (const qa of context) {
-    contextString += `Question: ${qa.question}\nAnswer: ${qa.answer}\n`
+    contextString += `Odin: ${qa.question}\nMuninn: ${qa.answer}\n`
   }
   return contextString
 }
@@ -46,7 +46,7 @@ export const createQuestionCapability = (
       if (context.length > 0) {
         const bc = buildContext(context)
         const contextString = `Given the context: ${bc}\n\n${inputMessage.text}`
-        inputText = `${contextString}\n${inputText}`
+        inputText = `You are Muninn, Odins raven. Your purpose is to keep him informed.\n${contextString}\n${inputText}`
       }
       console.log('Asking OpenAI >', inputText)
 

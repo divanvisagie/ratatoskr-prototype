@@ -5,7 +5,7 @@ import { Capability } from './Capability'
 export const createNotionCapability = (): Capability => {
   const notionService = createNotionService()
   return {
-    appliesTo: async (inputMessage: Message) => Promise.resolve(true),
+    appliesTo: async (_inputMessage: Message) => Promise.resolve(true),
 
     process(inputMessage) {
       notionService.addEntryToTodaysPage(inputMessage.text)

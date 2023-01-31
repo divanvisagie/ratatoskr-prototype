@@ -55,7 +55,7 @@ bot.on('message', async (msg: TelegramBot.Message) => {
       } else if (response.image) {
         bot.sendPhoto(msg.chat.id, response.image)
       } else {
-        bot.sendMessage(msg.chat.id, 'I do not have that campability yet.')
+        bot.sendMessage(msg.chat.id, '...')
       }
       return
     }
