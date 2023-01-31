@@ -1,12 +1,24 @@
 import TelegramBot from 'node-telegram-bot-api'
-import { createNotionService } from './services/NotionService'
-import { createAiService } from './services/AiService'
 import { config } from './config'
+import { Capability } from './capability/Capability'
+import { createNotionCapability } from './capability/NotionCapability'
+import { createQuestionCapability } from './capability/QuestionCapability'
+import { fromTelegramBotMessage } from './Message'
+import { createImageGenerationCapability } from './capability/ImageGenerationCapability'
+
+const allowed = require('./data/allowed.json')
 
 const bot = new TelegramBot(config.TELEGRAM_BOT_TOKEN, { polling: true })
 
-const notionService = createNotionService()
-const aiService = createAiService()
+const userAllowed = (user: TelegramBot.User | undefined): boolean => {
+  if (!user) return false
+  return allowed.includes(user.username)
+}
+
+const capabilities: Capability[] = [
+  createQuestionCapability(createImageGenerationCapability()),
+  // createNotionCapability(),
+]
 
 bot.onText(/\/start/, (msg: any) => {
   console.log('>>>', 'User started the bot')
@@ -22,9 +34,9 @@ bot.onText(/\/echo (.+)/, (msg: any, match: any) => {
 })
 
 bot.on('message', async (msg: TelegramBot.Message) => {
-  if (msg.from?.username !== 'DivanVisagie') {
+  if (userAllowed(msg.from) === false) {
     console.warn('>>>', 'User is not Divan', msg)
-    bot.sendMessage(msg.chat.id, 'You are not Divan, go away.')
+    bot.sendMessage(msg.chat.id, 'You are not a friend, go away.')
     return
   }
 
@@ -33,39 +45,21 @@ bot.on('message', async (msg: TelegramBot.Message) => {
     return
   }
 
-  if (aiService.isQuestion(msg.text)) {
-    if (aiService.isImageQuestion(msg.text)) {
-      const image = await aiService.getImage(msg.text)
+  const message = fromTelegramBotMessage(msg)
+  for (const command of capabilities) {
+    if (await command.appliesTo(message)) {
+      const response = await command.process(message)
 
-      if (image) {
-        bot.sendPhoto(msg.chat.id, image)
-        return
+      if (response.text) {
+        bot.sendMessage(msg.chat.id, response.text)
+      } else if (response.image) {
+        bot.sendPhoto(msg.chat.id, response.image)
       } else {
-        bot.sendMessage(msg.chat.id, 'I can not draw that.')
+        bot.sendMessage(msg.chat.id, 'I do not have that campability yet.')
       }
       return
     }
-
-    const answer = await aiService.getAnswer(msg.text)
-    bot.sendMessage(
-      msg.chat.id,
-      answer || 'could not find an anwer from OpenAI'
-    )
-    return
   }
-
-  console.log('>>>', 'sent a message', msg)
-
-  const chatId = msg.chat.id
-
-  try {
-    const response = await notionService.addEntryToTodaysPage(msg.text || '')
-  } catch (error) {
-    bot.sendMessage(
-      chatId,
-      'I failed to save this Hávi, your fears are justified'
-    )
-  }
-
-  bot.sendMessage(chatId, 'I shall save this Hávi')
 })
+
+console.log('>>', 'Bot started')
