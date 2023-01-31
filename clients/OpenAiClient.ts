@@ -1,12 +1,11 @@
-import nlp from 'compromise'
 import { Configuration, ImagesResponseDataInner, OpenAIApi } from 'openai'
+import { config } from '../config'
 
-const appiKey = process.env.OPENAI_API_KEY || ''
-
-const config = new Configuration({
-  apiKey: appiKey,
-})
-const openAi = new OpenAIApi(config)
+const openAi = new OpenAIApi(
+  new Configuration({
+    apiKey: config.OPENAI_API_KEY,
+  })
+)
 
 const model = 'text-davinci-003'
 

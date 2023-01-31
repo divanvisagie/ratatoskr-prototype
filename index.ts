@@ -1,9 +1,9 @@
 import TelegramBot from 'node-telegram-bot-api'
 import { createNotionService } from './services/NotionService'
 import { createAiService } from './services/AiService'
+import { config } from './config'
 
-const token = process.env.TELEGRAM_BOT_TOKEN || ''
-const bot = new TelegramBot(token, { polling: true })
+const bot = new TelegramBot(config.TELEGRAM_BOT_TOKEN, { polling: true })
 
 const notionService = createNotionService()
 const aiService = createAiService()

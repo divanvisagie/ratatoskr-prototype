@@ -3,6 +3,7 @@ import {
   CreatePageResponse,
   PartialPageObjectResponse,
 } from '@notionhq/client/build/src/api-endpoints'
+import { config } from '../config'
 
 function getDayOfWeek(): string {
   const date = new Date()
@@ -21,7 +22,7 @@ function getDayOfWeek(): string {
 }
 
 export const createNotionService = () => {
-  const databaseId = process.env.NOTION_JOURNAL_DB || ''
+  const databaseId = config.NOTION_JOURNAL_DB
 
   const notion = new Client({ auth: process.env.NOTION_TOKEN })
 
