@@ -1,5 +1,7 @@
 from typing import List
 
+from clients.openai_client import get_answer
+
 from .filter_types import Filter
 from message_handler.message_types import RequestMessage
 
@@ -18,8 +20,8 @@ def build_context(context: List[QAPair]) -> str:
         context_string += f'Odin: {qa.question}\nMuninn: {qa.answer}'
     return context_string
 
-def get_answer(input_text: str):
-    return 'I am Muninn, the raven of Odin. I am here to keep him informed.'
+# def get_answer(input_text: str):
+#     return 'I am Muninn, the raven of Odin. I am here to keep him informed.'
 
 class QuestionFilter (Filter):
     def __init__(self):

@@ -20,8 +20,7 @@ async def handle_incoming_telegram_message(update: Update, context: ContextTypes
                 await update.message.reply_text(ans)
                 return
             except Exception as e:
-                print(e)
-                print('Failed to create RequestMessage')
+                print(f'Failed to create RequestMessage: {e}')
                 return
            
     await update.message.reply_text('Could not process your message.')
