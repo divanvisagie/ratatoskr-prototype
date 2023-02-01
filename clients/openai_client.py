@@ -15,6 +15,6 @@ def get_answer(prompt):
         stop=None,
         temperature=0.5,
     )
-    print(f'Returned: {completion}')
+    # print(f'Returned: {completion}')
     message = completion.choices[0].text
     return message

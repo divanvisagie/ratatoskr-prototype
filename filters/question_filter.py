@@ -1,20 +1,22 @@
 from typing import List
 
 from clients.openai_client import get_answer
+from repositories.history import QAPair, get_history_for_user, save_history_for_user
 
 from .filter_types import Filter
 from message_handler.message_types import RequestMessage
 
-static_context = 'You are Muninn, Odins raven. Your purpose is to keep him informed.'
+static_context = """You are Muninn, Odins raven. 
+Along with Huginn, your purpose is to keep him informed.
+You eat the corpses of the dead and bring back their memories to Odin.
+"""
 BUFFER_SIZE = 100
 
 
-class QAPair ():
-    def __init__(self, question, answer):
-        self.question = question
-        self.answer = answer
 
-def build_context(context: List[QAPair]) -> str:
+
+def build_context(user_id: int) -> str:
+    context = get_history_for_user(user_id)
     context_string = ''
     for qa in context:
         context_string += f'Odin: {qa.question}\nMuninn: {qa.answer}'
@@ -29,15 +31,14 @@ class QuestionFilter (Filter):
 
     def process(self, msg: RequestMessage):
         input_text = msg.text
-        if len(self.context) > 0:
-            context_str = build_context(self.context)
-            input_text = f'Given the context of:\n{context_str}\n\n{msg.text}'
-        input_text = f'{static_context}\n{input_text}'
+        context_str = build_context(msg.user_id)
+        input_text = f'Given the context of:\n{context_str}\n\n{msg.text}'
+        input_text = f'{static_context}\n{input_text}\nMuninn:'
 
         answer = get_answer(input_text)
 
         if len(self.context) > BUFFER_SIZE:
             self.context.pop(0)
-        self.context.append(QAPair(msg.text, answer))
+        save_history_for_user(msg.user_id, QAPair(msg.text, answer))
 
         return answer
