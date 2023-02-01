@@ -20,12 +20,8 @@ def build_context(context: List[QAPair]) -> str:
         context_string += f'Odin: {qa.question}\nMuninn: {qa.answer}'
     return context_string
 
-# def get_answer(input_text: str):
-#     return 'I am Muninn, the raven of Odin. I am here to keep him informed.'
-
 class QuestionFilter (Filter):
     def __init__(self):
-        # self.filters = filters
         self.context = []
 
     def applies_to(self, msg: RequestMessage):
@@ -38,7 +34,6 @@ class QuestionFilter (Filter):
             input_text = f'Given the context of:\n{context_str}\n\n{msg.text}'
         input_text = f'{static_context}\n{input_text}'
 
-        print(input_text)
         answer = get_answer(input_text)
 
         if len(self.context) > BUFFER_SIZE:
