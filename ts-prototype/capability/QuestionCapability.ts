@@ -1,4 +1,3 @@
-import nlp from 'compromise'
 import { Message } from '../Message'
 import { createAiService } from '../services/AiService'
 import { Capability, Response } from './Capability'

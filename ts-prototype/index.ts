@@ -6,7 +6,7 @@ import { createQuestionCapability } from './capability/QuestionCapability'
 import { fromTelegramBotMessage } from './Message'
 import { createImageGenerationCapability } from './capability/ImageGenerationCapability'
 
-const allowed = require('./data/allowed.json')
+const allowed = require('../data/allowed.json')
 
 const bot = new TelegramBot(config.TELEGRAM_BOT_TOKEN, { polling: true })
 
