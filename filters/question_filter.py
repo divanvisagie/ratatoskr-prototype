@@ -13,8 +13,6 @@ You eat the corpses of the dead and bring back their memories to Odin.
 BUFFER_SIZE = 100
 
 
-
-
 def build_context(user_id: int) -> str:
     context = get_history_for_user(user_id)
     context_string = ''
