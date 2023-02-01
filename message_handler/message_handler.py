@@ -5,11 +5,11 @@ import telegram
 from telegram import Update
 from telegram.ext import ContextTypes
 
-from filters.question_filter import QuestionFilter
+from filters.question_filter import ContextSavingFilter, OpenAiQuestionFilter
 from message_handler.message_types import RequestMessage
 from repositories.user import get_user_from_db
 
-filters = [QuestionFilter()]
+filters = [ContextSavingFilter(OpenAiQuestionFilter())]
 
 async def handle_incoming_telegram_message(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     """Echo the user message."""

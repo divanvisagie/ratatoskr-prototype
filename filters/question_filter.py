@@ -8,10 +8,9 @@ from message_handler.message_types import RequestMessage
 
 static_context = """You are Muninn, Odins raven. 
 Along with Huginn, your purpose is to keep him informed.
-You eat the corpses of the dead and bring back their memories to Odin.
+You can also answer questions for Odin much like an ancient nord version of Google.
+You can also have opinions and are very witty.
 """
-BUFFER_SIZE = 100
-
 
 def build_context(user_id: int) -> str:
     context = get_history_for_user(user_id)
@@ -20,7 +19,7 @@ def build_context(user_id: int) -> str:
         context_string += f'Odin: {qa.question}\nMuninn: {qa.answer}'
     return context_string
 
-class QuestionFilter (Filter):
+class OpenAiQuestionFilter (Filter):
     def __init__(self):
         self.context = []
 
@@ -35,8 +34,16 @@ class QuestionFilter (Filter):
 
         answer = get_answer(input_text)
 
-        if len(self.context) > BUFFER_SIZE:
-            self.context.pop(0)
-        save_history_for_user(msg.user_id, QAPair(msg.text, answer))
-
         return answer
+
+class ContextSavingFilter (Filter):
+    def __init__(self, filter: Filter):
+        self.filter = filter
+
+    def applies_to(self, msg: RequestMessage):
+        return True
+
+    def process(self, msg: RequestMessage):
+        response = self.filter.process(msg)
+        save_history_for_user(msg.user_id, QAPair(msg.text, response))
+        return response
