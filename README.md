@@ -6,3 +6,8 @@ The raven of memory takes your messages and stores them in a place for safe keep
 ```bash
 python3 -m venv env
 ```
+
+Saving dependencies
+```
+pip freeze > requirements.txt 
+```
