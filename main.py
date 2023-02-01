@@ -3,7 +3,7 @@ from telegram.ext import ApplicationBuilder, CommandHandler, ContextTypes, Messa
 from os import environ
 import logging
 
-from message_handler import handle_incoming_telegram_message
+from message_handler.message_handler import handle_incoming_telegram_message
 
 TELEGRAM_BOT_TOKEN = environ['TELEGRAM_BOT_TOKEN']
 
