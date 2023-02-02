@@ -1,7 +1,6 @@
 from abc import ABC, abstractmethod
 
-from message_handler.message_types import RequestMessage
-
+from message_handler.message_types import RequestMessage, ResponseMessage
 
 
 class Filter (ABC):
@@ -11,5 +10,5 @@ class Filter (ABC):
         pass
     
     @abstractmethod
-    def process(self, msg: RequestMessage):
+    def process(self, msg: RequestMessage) -> ResponseMessage:
         pass

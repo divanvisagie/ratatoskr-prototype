@@ -20,7 +20,7 @@ def main():
     app = ApplicationBuilder().token(TELEGRAM_BOT_TOKEN).build()
     app.add_handler(CommandHandler('ping', ping))
     app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_incoming_telegram_message))
-    print('starting app..')
+    logger.info('starting app..')
     app.run_polling()
 
 if __name__ == "__main__":
