@@ -4,7 +4,7 @@ from telegram import Update
 from telegram.ext import ContextTypes
 from filters.code_question_filter import OpenAiCodeGenFilter
 from filters.context_saving_filter import ContextSavingFilter
-from filters.notion_filter import NotionFilter
+from filters.notion.notion_filter import NotionFilter
 
 from filters.question_filter import OpenAiQuestionFilter
 from message_handler.message_types import RequestMessage
