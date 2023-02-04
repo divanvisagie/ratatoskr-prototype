@@ -133,3 +133,37 @@ def add_entry_to_todays_page(text: str) -> str:
     notion.blocks.children.append(block_id=page_id, children=new_content)
 
     return todays_page['url']
+
+def create_database():
+    try:
+        parent_page_id = "10c62b0cb4664fdda8b312680638c695"
+        new_calendar = {
+            
+        }
+
+        # Create the new database
+        database_id = notion.databases.create(
+            parent={"page_id": parent_page_id},
+            type='calendar',
+            title = {
+                "plain_text": 'My Calendar'
+            },
+            properties= [
+                {
+                    "title": {
+                        "plain_text": 'Date'
+                    },
+                    "property_type": 'date'
+                },
+                {
+                'title': {
+                    "plain_text": 'Event'
+                },
+                "property_type": 'rich_text'
+                }
+            ])
+        logger.info(f"Created database with id {database_id}")
+        return True
+    except Exception as error:
+        logger.error("Failed to create database", error)
+        return False

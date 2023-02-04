@@ -9,7 +9,7 @@ import notion_filter
 
 class TestNotionFilter(unittest.TestCase):
     def test_get_token(self):
-        actual = notion_filter.get_token("I got the secret secret_1234.")
+        actual = notion_filter.extract_token_from_message("I got the secret secret_1234.")
         self.assertEqual(actual,"secret_1234")
 
 
@@ -17,6 +17,12 @@ class TestNotionFilter(unittest.TestCase):
         self.assertTrue(notion_filter.save_requested("Could you save this for me?"))
         self.assertTrue(notion_filter.save_requested("save"))
         self.assertTrue(notion_filter.save_requested("save that please"))
+
+    def test_extract_database_from_message(self):
+        actual = notion_filter.extract_database_from_message("i got this https://www.notion.so/d2b36ebe405740ecab150b9e8b1ed50a?v=58d3b2314c0e493b80219c2250304e04")
+        self.assertEqual(actual,"d2b36ebe405740ecab150b9e8b1ed50a")
+        actual = notion_filter.extract_database_from_message("cheese")
+        self.assertIsNone(actual)
 
 
 if __name__ == '__main__':
