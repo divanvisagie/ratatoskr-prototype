@@ -1,21 +1,25 @@
 import logging
-import sqlite3
-from typing import Tuple
-import telegram
 
 from telegram import Update
+import telegram
 from telegram.ext import ContextTypes
+from filters.context_saving_filter import ContextSavingFilter
 
-from filters.question_filter import ContextSavingFilter, OpenAiQuestionFilter
+from filters.question_filter import OpenAiCodeGenFilter, OpenAiQuestionFilter
 from message_handler.message_types import RequestMessage
 from repositories.user import get_user_from_db
 
-filters = [ContextSavingFilter(OpenAiQuestionFilter())]
+filters = [ContextSavingFilter(OpenAiQuestionFilter([OpenAiCodeGenFilter()]))]
 
 logger = logging.getLogger(__name__)
 
 async def handle_incoming_telegram_message(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     """Echo the user message."""
+    if update.message.reply_to_message is not None:
+        logger.info("We have received a reply")
+        await update.message.reply_text('We do not support replies yet')
+        return
+
     user = get_user_from_db(update.message.from_user.username)
     if user is None:
         logger.warning('User not found')
@@ -28,7 +32,7 @@ async def handle_incoming_telegram_message(update: Update, context: ContextTypes
             logger.info('Found applicable filter')
             try:
                 ans = filter.process(rm)
-                await update.message.reply_text(ans.text)
+                await update.message.reply_text(text=ans.text, parse_mode='Markdown')
                 return
             except Exception as e:
                 print(f'Failed to process message: {e}')
