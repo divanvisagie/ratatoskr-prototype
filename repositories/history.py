@@ -1,7 +1,9 @@
+import logging
 import sqlite3
 from typing import List, Tuple
 
 conn = sqlite3.connect('data/muninn.db')
+logger = logging.getLogger(__name__)
 
 class QAPair ():
     def __init__(self, question, answer):
@@ -17,11 +19,36 @@ def get_history_for_user(user_id: int) -> List[QAPair]:
         result =  c.fetchall()
         return [QAPair(*row) for row in result]
     except Exception as e:
-        print(f'Failed to get history for user: {e}')
+        logger.error(f'Failed to get history for user: {e}')
         return []
 
 def save_history_for_user(user_id: int, pair: QAPair):
-    c = conn.cursor()
-    c.execute('INSERT INTO history (user_id, question, answer) VALUES (?, ?, ?)', (user_id, pair.question, pair.answer))
-    conn.commit()
-    return
+    try:
+        c = conn.cursor()
+        c.execute('INSERT INTO history (user_id, question, answer) VALUES (?, ?, ?)', (user_id, pair.question, pair.answer))
+        conn.commit()
+        return
+    except Exception as e:
+        logger.error(f'Failed to save history for user: {e}')
+        return
+
+def save_app(user_id: int, app_name: str):
+    try:
+        c = conn.cursor()
+        c.execute('INSERT INTO app (id, app_name) VALUES (?, ?)', (user_id, app_name))
+        conn.commit()
+        return
+    except Exception as e:
+        logger.error(f'Failed to save app for user: {e}')
+        return
+
+def get_app_id_by_name(app_name: str) -> int:
+    try:
+        c = conn.cursor()
+        c.execute('SELECT id FROM app WHERE app_name = ?', (app_name,))
+        result = c.fetchone()
+        return result[0]
+    except Exception as e:
+        logger.error(f'Failed to get app id for app name: {e}')
+        return -1
+   

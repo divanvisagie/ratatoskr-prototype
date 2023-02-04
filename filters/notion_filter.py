@@ -12,7 +12,7 @@ class NotionFilter (Filter):
     def applies_to(self, msg: RequestMessage):
         return False
 
-    def process(self, msg: RequestMessage):
+    def process(self, msg: RequestMessage) -> ResponseMessage:
         logger.info(f'Context saved for user {msg.user_id}')
         add_entry_to_todays_page(msg.text)
         return ResponseMessage("I shall write this in runes Havi")
