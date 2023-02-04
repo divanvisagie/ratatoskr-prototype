@@ -22,6 +22,16 @@ def get_history_for_user(user_id: int) -> List[QAPair]:
         logger.error(f'Failed to get history for user: {e}')
         return []
 
+def get_last_answer(user_id: int) -> str:
+    try:
+        c = conn.cursor()
+        c.execute('SELECT answer FROM history WHERE user_id = ? ORDER BY id DESC LIMIT 1', (user_id,))
+        result = c.fetchone()
+        return result[0]
+    except Exception as e:
+        logger.error(f'Failed to get last answer for user: {e}')
+        return ''
+
 def save_history_for_user(user_id: int, pair: QAPair):
     try:
         c = conn.cursor()

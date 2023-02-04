@@ -16,9 +16,10 @@ class RequestMessage(object):
 
 class ResponseMessage(object):
     """Represents a response to a user input message"""
-    def __init__(self, text: str, responding_application: str = None):
+    def __init__(self, text: str, responding_application: str = None, app_response: str = None):
         self.text = text
         self.responding_application = responding_application
+        self.app_response = app_response
 
     def __str__(self):
         return f'ResponseMessage: {self.text}'

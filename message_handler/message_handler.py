@@ -1,15 +1,19 @@
 import logging
 
 from telegram import Update
-import telegram
 from telegram.ext import ContextTypes
+from filters.code_question_filter import OpenAiCodeGenFilter
 from filters.context_saving_filter import ContextSavingFilter
+from filters.notion_filter import NotionFilter
 
-from filters.question_filter import OpenAiCodeGenFilter, OpenAiQuestionFilter
+from filters.question_filter import OpenAiQuestionFilter
 from message_handler.message_types import RequestMessage
 from repositories.user import get_user_from_db
 
-filters = [ContextSavingFilter(OpenAiQuestionFilter([OpenAiCodeGenFilter()]))]
+filters = [ContextSavingFilter([
+    NotionFilter(),
+    OpenAiQuestionFilter([OpenAiCodeGenFilter()])
+])]
 
 logger = logging.getLogger(__name__)
 

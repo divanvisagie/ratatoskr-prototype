@@ -24,19 +24,6 @@ def build_context_from_history(user_id: int) -> str:
         context_string += f'{HUMAN_STOP_TOKEN}: {qa.question}\n{AI_STOP_TOKEN}: {qa.answer}'
     return context_string
 
-class OpenAiCodeGenFilter(Filter):
-    def __init__(self):
-        pass
-
-    def applies_to(self, msg: RequestMessage):
-        answer = question_is_about_code(msg.text)
-        print(f'Question is about code: {answer}')
-        return answer
-
-    def process(self, msg: RequestMessage) -> ResponseMessage:
-        answer = get_code_answer(msg.text)
-        return ResponseMessage(answer)
-
 class OpenAiQuestionFilter (Filter):
     def __init__(self, filters: List[Filter]):
         self.filters = filters
