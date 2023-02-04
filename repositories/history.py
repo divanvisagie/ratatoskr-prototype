@@ -32,10 +32,10 @@ def save_history_for_user(user_id: int, pair: QAPair):
         logger.error(f'Failed to save history for user: {e}')
         return
 
-def save_app(user_id: int, app_name: str):
+def save_app(app_name: str):
     try:
         c = conn.cursor()
-        c.execute('INSERT INTO app (id, app_name) VALUES (?, ?)', (user_id, app_name))
+        c.execute('INSERT INTO app (app_name) VALUES (?)', (app_name,))
         conn.commit()
         return
     except Exception as e:

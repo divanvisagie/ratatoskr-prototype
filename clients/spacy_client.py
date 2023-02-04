@@ -14,3 +14,17 @@ def question_is_about_code(question: str) -> bool:
         return True
     
     return False
+
+
+def is_youtube_video(question: str) -> bool:
+    doc = nlp(question)
+
+    # Check if sentence contains a youtube link
+    if any(token.text.lower().startswith("https://www.youtube.com/") for token in doc):
+        return True
+
+    # Check if the sentence contains specific keywords or phrases
+    if any(token.text.lower() in ["youtube", "video"] for token in doc):
+        return True
+    
+    return False
