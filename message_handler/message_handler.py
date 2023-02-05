@@ -18,6 +18,7 @@ filters = [ContextSavingFilter([
 logger = logging.getLogger(__name__)
 
 async def handle_incoming_telegram_message(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    logger.info(f"Recieved message in context: {context}")
     """Echo the user message."""
     if update.message.reply_to_message is not None:
         logger.info("We have received a reply")
@@ -33,7 +34,7 @@ async def handle_incoming_telegram_message(update: Update, context: ContextTypes
     rm = RequestMessage.from_telegram_message(update.message, user.id)
     for filter in filters:
         if filter.applies_to(rm):
-            logger.info('Found applicable filter')
+            logger.info(f'Found applicable filter {filter}')
             try:
                 ans = filter.process(rm)
                 await update.message.reply_text(text=ans.text, parse_mode='Markdown')

@@ -1,49 +1,43 @@
 import logging
+from typing import Callable
 import spacy
 
 from filters.filter_types import Filter
 from message_handler.message_types import RequestMessage, ResponseMessage
-from repositories.history import get_last_answer
+from repositories.history import get_app_id_by_name, get_last_answer
 from repositories.secrets import Secret, get_app_secret_for_user, save_secret
-
-TOKEN_REQUEST_MESSAGE = """
-I can save messages in Notion if you give me a token.
-You can create the token by:
-
-- Going to https://www.notion.so/my-integrations.
-- Clicking on the 'Create new Integration' button.
-- Giving it it a name and selecting 'Internal Integration'.
-- Then clicking on 'Submit'.
-
-You can then copy the token and send it to me.
-"""
-API_TOKEN_REQUEST = "API_TOKEN_REQUEST"
 
 logger = logging.getLogger(__name__)
 nlp = spacy.load("en_core_web_sm")
 
-def extract_token_from_message(msg: str) -> str:
-    doc = nlp(msg)
-    for token in doc:
-        if token.text.startswith('secret_'):
-            return token.text
-    return None
+class MissingTokenFilter (Filter):
 
-class ApiTokenFilter (Filter):
+    def __init__(self, app_id: int, api_token_key: str, request_message: str, extract: Callable[[str], str]):
+        """Filter that asks for a token if the user has not yet provided one."""
+        self.app_id = app_id
+        self.api_token_key = api_token_key
+        self.extract = extract
+        self.request_message = request_message
 
     def applies_to(self, msg: RequestMessage):
+        """Applies if the user has not yet provided token or if the message contains a token."""
+        token = get_app_secret_for_user(msg.user_id, self.app_id, self.api_token_key)
+
+        if token is None:
+            return True
+
         last_answer = get_last_answer(msg.user_id)
-        if last_answer == API_TOKEN_REQUEST and extract_token_from_message(msg.text) is not None:
+        if last_answer == self.api_token_key and self.extract(msg.text) is not None:
             return True
 
     def process(self, msg: RequestMessage) -> ResponseMessage:
-        if get_app_secret_for_user(msg.user_id, self.app_id, API_TOKEN_REQUEST) is None:
-            token = extract_token_from_message(msg.text)
+        if get_app_secret_for_user(msg.user_id, self.app_id, self.api_token_key) is None:
+            token = self.extract(msg.text)
             if token is None:
                 return ResponseMessage(
-                    TOKEN_REQUEST_MESSAGE, 
+                    self.request_message, 
                     "Notion", 
-                    API_TOKEN_REQUEST
+                    self.api_token_key
                 )
-            save_secret(Secret(msg.user_id, self.app_id, API_TOKEN_REQUEST, token))
+            save_secret(Secret(msg.user_id, self.app_id, self.api_token_key, token))
             return ResponseMessage("I found a token in your message. I will use it to save messages in Notion for you.")
