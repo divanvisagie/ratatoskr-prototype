@@ -60,9 +60,12 @@ def save_requested(question: str) -> bool:
             return True
     return False
 
-
-
-
+def should_save_previous_message(question: str) -> bool:
+    doc = nlp(question)
+    for token in doc:
+      if token.pos_ == "PROPN":
+        return False
+    return True
 
 class NotionFilter (Filter):
     def __init__(self):
@@ -91,8 +94,12 @@ class NotionFilter (Filter):
                 logger.info(f'Applying subfilter {filter}')
                 return filter.process(msg)
 
+        message_to_save = msg.text
+        if should_save_previous_message(msg.text):
+            message_to_save = get_last_answer(msg.user_id)
+
         try:
-            url = add_entry_to_todays_page(msg.text)
+            url = add_entry_to_todays_page(message_to_save)
             return ResponseMessage(f"I saved your message in Notion. You can find it here: {url}")
         except Exception as e:
             logger.error(f'Failed to save message to Notion: {e}')

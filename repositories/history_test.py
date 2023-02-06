@@ -1,3 +1,4 @@
+import logging
 import unittest
 import history
 
@@ -11,4 +12,7 @@ class TestHistoryRepository(unittest.TestCase):
         self.assertTrue(True)
 
 if __name__ == '__main__':
+    logging.basicConfig(
+        format="%(asctime)s - %(name)s - %(levelname)s - %(message)s", level=logging.INFO
+    )
     unittest.main()

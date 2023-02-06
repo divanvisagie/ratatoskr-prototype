@@ -1,6 +1,8 @@
 import logging
 import spacy
 
+from spacy.tokens import Token
+
 logger = logging.getLogger(__name__)
 
 # Load the English model
@@ -42,3 +44,13 @@ def save_requested(question: str) -> bool:
             return True
 
     return False
+
+def print_token_details(token: Token):
+    logger.info(f'Text: {token.text}')
+    logger.info(f'Lemma: {token.lemma_}')
+    logger.info(f'POS: {token.pos_}')
+    logger.info(f'Tag: {token.tag_}')
+    logger.info(f'Dep: {token.dep_}')
+    logger.info(f'Shape: {token.shape_}')
+    logger.info(f'Is alpha: {token.is_alpha}')
+    logger.info(f'Is stop: {token.is_stop}')

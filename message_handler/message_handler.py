@@ -4,6 +4,7 @@ from telegram import Update
 from telegram.ext import ContextTypes
 from filters.code_question_filter import OpenAiCodeGenFilter
 from filters.context_saving_filter import ContextSavingFilter
+from filters.duck_duck_go.filter import DuckDuckFilter
 from filters.notion.notion_filter import NotionFilter
 
 from filters.question_filter import OpenAiQuestionFilter
@@ -12,6 +13,7 @@ from repositories.user import get_user_from_db
 
 filters = [ContextSavingFilter([
     NotionFilter(),
+    DuckDuckFilter(),
     OpenAiQuestionFilter([OpenAiCodeGenFilter()])
 ])]
 

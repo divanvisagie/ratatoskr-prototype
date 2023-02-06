@@ -12,7 +12,6 @@ class TestNotionFilter(unittest.TestCase):
         actual = notion_filter.extract_token_from_message("I got the secret secret_1234.")
         self.assertEqual(actual,"secret_1234")
 
-
     def test_save_requested(self):
         self.assertTrue(notion_filter.save_requested("Could you save this for me?"))
         self.assertTrue(notion_filter.save_requested("save"))
@@ -24,6 +23,11 @@ class TestNotionFilter(unittest.TestCase):
         actual = notion_filter.extract_database_from_message("cheese")
         self.assertIsNone(actual)
 
+    def test_should_save_previous_message(self):
+        actual = notion_filter.should_save_previous_message("save that please")
+        self.assertTrue(actual)
+        actual = notion_filter.should_save_previous_message("save this: https://www.youtube.com/watch?v=dQw4w9WgXcQ")
+        self.assertFalse(actual)
 
 if __name__ == '__main__':
     logging.basicConfig(
