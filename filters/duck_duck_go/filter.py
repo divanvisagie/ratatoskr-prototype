@@ -30,7 +30,7 @@ class DuckDuckFilter(Filter):
         doc = nlp(msg.text)
      
         for token in doc:
-            if token.text.lower() in {"documentation", "doc", "docs", "search"}:
+            if token.text.lower() in {"documentation", "doc", "docs", "search", "find"}:
                 for child in token.children:
                     print_token_details(child)
                     if child.dep_ in {"prep", "det"}:
