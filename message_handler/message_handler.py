@@ -9,10 +9,13 @@ from filters.notion.notion_filter import NotionFilter
 
 from filters.question_filter import OpenAiQuestionFilter
 from message_handler.message_types import RequestMessage
+from repositories.app import AppRepository
+from repositories.history import HistoryRepository
+from repositories.secrets import SecretRepository
 from repositories.user import get_user_from_db
 
 filters = [ContextSavingFilter([
-    # NotionFilter(),
+    NotionFilter(),
     DuckDuckFilter(),
     OpenAiQuestionFilter([OpenAiCodeGenFilter()])
 ])]
@@ -32,6 +35,7 @@ async def handle_incoming_telegram_message(update: Update, context: ContextTypes
         logger.warning('User not found')
         await update.message.reply_text('YOU SHALL NOT PASS!')
         return
+
     logger.info(f'User found: {user.id}')
     rm = RequestMessage.from_telegram_message(update.message, user.id)
     for filter in filters:

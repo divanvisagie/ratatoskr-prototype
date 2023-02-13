@@ -5,7 +5,7 @@ import spacy
 from filters.filter_types import Filter
 from message_handler.message_types import RequestMessage, ResponseMessage
 from repositories.history import HistoryRepository
-from repositories.secrets import Secret, get_app_secret_for_user, save_secret
+from repositories.secrets import Secret, SecretRepository
 
 logger = logging.getLogger(__name__)
 nlp = spacy.load("en_core_web_sm")
@@ -19,20 +19,16 @@ class MissingTokenFilter (Filter):
         self.extract = extract
         self.request_message = request_message
         self.history_repository = HistoryRepository()
+        self.secret_repository = SecretRepository()
 
     def applies_to(self, msg: RequestMessage):
         """Applies if the user has not yet provided token or if the message contains a token."""
-        token = get_app_secret_for_user(msg.user_id, self.app_id, self.api_token_key)
-
-        if token is None:
-            return True
-
         last_answer = self.history_repository.get_by_id(msg.user_id,1)[0].answer
         if last_answer == self.api_token_key and self.extract(msg.text) is not None:
             return True
 
     def process(self, msg: RequestMessage) -> ResponseMessage:
-        if get_app_secret_for_user(msg.user_id, self.app_id, self.api_token_key) is None:
+        if self.secret_repository.get_app_secret_for_user(msg.user_id, self.app_id, self.api_token_key) is None:
             token = self.extract(msg.text)
             if token is None:
                 return ResponseMessage(
@@ -40,5 +36,5 @@ class MissingTokenFilter (Filter):
                     "Notion", 
                     self.api_token_key
                 )
-            save_secret(Secret(msg.user_id, self.app_id, self.api_token_key, token))
+            self.secret_repository.save_secret(Secret(msg.user_id, self.app_id, self.api_token_key, token))
             return ResponseMessage("I found a token in your message. I will use it to save messages in Notion for you.")

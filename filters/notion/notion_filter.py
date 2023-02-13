@@ -5,11 +5,11 @@ import re
 from clients.notion_service_client import add_entry_to_todays_page
 from filters.filter_types import Filter
 from filters.notion.api_token_filter import MissingTokenFilter
+from filters.notion.model import save_requested
 from message_handler.message_types import RequestMessage, ResponseMessage
 from repositories.app import AppRepository
 from repositories.history import HistoryRepository
-from repositories.secrets import Secret, get_app_secret_for_user, save_secret
-
+from repositories.secrets import Secret, SecretRepository
 TOKEN_REQUEST_MESSAGE = """
 I can save messages in Notion if you give me a token.
 You can create the token by:
@@ -35,7 +35,8 @@ logger = logging.getLogger(__name__)
 nlp = spacy.load("en_core_web_sm")
 
 def user_has_token(user_id: int, app_id: int, token: str) -> bool:
-    secret = get_app_secret_for_user(user_id, app_id, token)
+    secret_repository = SecretRepository()
+    secret = secret_repository.get_app_secret_for_user(user_id, app_id, token)
     if secret is not None:
         return True 
     return False
@@ -53,13 +54,6 @@ def extract_database_from_message(msg: str) -> str:
         return match.group(1)
     except:
         return None
-
-def save_requested(question: str) -> bool:
-    doc = nlp(question)
-    for token in doc:
-        if token.head.pos_ == "VERB" and token.head.text.lower() in ["save", "store", "remember", "keep"]:
-            return True
-    return False
 
 def should_save_previous_message(question: str) -> bool:
     doc = nlp(question)
@@ -103,7 +97,7 @@ class NotionFilter (Filter):
 
         try:
             url = add_entry_to_todays_page(message_to_save)
-            return ResponseMessage(f"I saved your message in Notion. You can find it here: {url}")
+            return ResponseMessage(f"I saved your message in Notion. You can find it here: {url}", responding_application="Notion")
         except Exception as e:
             logger.error(f'Failed to save message to Notion: {e}')
             return ResponseMessage("I failed to save your message to Notion. Please try again later.")

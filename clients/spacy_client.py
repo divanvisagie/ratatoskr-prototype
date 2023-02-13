@@ -8,7 +8,7 @@ logger = logging.getLogger(__name__)
 # Load the English model
 nlp = spacy.load("en_core_web_sm")
 
-code_words = ["generate", "code", "program", "python", "javascript"]
+code_words = ["generate", "code", "program"]
 
 def question_is_about_code(question: str) -> bool:
     doc = nlp(question)
