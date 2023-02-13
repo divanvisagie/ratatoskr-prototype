@@ -4,7 +4,7 @@ import spacy
 
 from filters.filter_types import Filter
 from message_handler.message_types import RequestMessage, ResponseMessage
-from repositories.history import get_app_id_by_name, get_last_answer
+from repositories.history import HistoryRepository
 from repositories.secrets import Secret, get_app_secret_for_user, save_secret
 
 logger = logging.getLogger(__name__)
@@ -18,6 +18,7 @@ class MissingTokenFilter (Filter):
         self.api_token_key = api_token_key
         self.extract = extract
         self.request_message = request_message
+        self.history_repository = HistoryRepository()
 
     def applies_to(self, msg: RequestMessage):
         """Applies if the user has not yet provided token or if the message contains a token."""
@@ -26,7 +27,7 @@ class MissingTokenFilter (Filter):
         if token is None:
             return True
 
-        last_answer = get_last_answer(msg.user_id)
+        last_answer = self.history_repository.get_by_id(msg.user_id,1)[0].answer
         if last_answer == self.api_token_key and self.extract(msg.text) is not None:
             return True
 

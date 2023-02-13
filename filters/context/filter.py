@@ -3,13 +3,14 @@ from typing import List
 from filters.filter_types import Filter
 
 from message_handler.message_types import RequestMessage, ResponseMessage
-from repositories.history import QAPair, save_history_for_user
+from repositories.history import History, HistoryRepository
 
 logger = logging.getLogger(__name__)
 
 class ContextSavingFilter (Filter):
     def __init__(self, filters: List[Filter]):
         self.filters = filters
+        self.history_repository = HistoryRepository()
 
     def applies_to(self, msg: RequestMessage):
         return True
@@ -22,7 +23,7 @@ class ContextSavingFilter (Filter):
                 response =  filter.process(msg)
                 app_response = response.app_response if response.app_response is not None else response.text
                 try:
-                    save_history_for_user(msg.user_id, QAPair(user_query, app_response))
+                    self.history_repository.save(msg.user_id, History(user_query, app_response))
                     logger.info(f'Context saved for user {msg.user_id}')
                 except Exception as e:
                     logger.error(f'Failed to save context for user {msg.user_id}: {e}')

@@ -3,7 +3,7 @@ from typing import List
 
 from clients.openai_client import AI_STOP_TOKEN, HUMAN_STOP_TOKEN, get_code_answer, get_text_answer
 from clients.spacy_client import question_is_about_code
-from repositories.history import QAPair, get_history_for_user, save_history_for_user
+from repositories.history import History, HistoryRepository
 
 from .filter_types import Filter
 from message_handler.message_types import RequestMessage, ResponseMessage
@@ -18,7 +18,8 @@ You are playfully sarcastic if a question is something most people should know.
 logger = logging.getLogger(__name__)
 
 def build_context_from_history(user_id: int) -> str:
-    context = get_history_for_user(user_id)
+    history_repository = HistoryRepository()
+    context = history_repository.get_by_id(user_id)
     context_string = ''
     for qa in context:
         context_string += f'{HUMAN_STOP_TOKEN}: {qa.question}\n{AI_STOP_TOKEN}: {qa.answer}'

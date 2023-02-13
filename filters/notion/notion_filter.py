@@ -6,7 +6,8 @@ from clients.notion_service_client import add_entry_to_todays_page
 from filters.filter_types import Filter
 from filters.notion.api_token_filter import MissingTokenFilter
 from message_handler.message_types import RequestMessage, ResponseMessage
-from repositories.history import get_app_id_by_name, get_last_answer
+from repositories.app import AppRepository
+from repositories.history import HistoryRepository
 from repositories.secrets import Secret, get_app_secret_for_user, save_secret
 
 TOKEN_REQUEST_MESSAGE = """
@@ -69,8 +70,10 @@ def should_save_previous_message(question: str) -> bool:
 
 class NotionFilter (Filter):
     def __init__(self):
-        app_id = get_app_id_by_name("Notion")
+        self.app_repository = AppRepository()
+        app_id = self.app_repository.get_id_by_name("Notion")
         self.app_id = app_id
+        self.history_repository = HistoryRepository()
         self.filters = [
             MissingTokenFilter(app_id, API_TOKEN_REQUEST, TOKEN_REQUEST_MESSAGE, extract_token_from_message),
             MissingTokenFilter(app_id, JOURNAL_DATABASE_REQUEST, JOURNAL_DATABASE_REQUEST_MESSAGE, extract_database_from_message)
@@ -96,7 +99,7 @@ class NotionFilter (Filter):
 
         message_to_save = msg.text
         if should_save_previous_message(msg.text):
-            message_to_save = get_last_answer(msg.user_id)
+            message_to_save = self.history_repository.get_by_id(msg.user_id)[0].answer
 
         try:
             url = add_entry_to_todays_page(message_to_save)

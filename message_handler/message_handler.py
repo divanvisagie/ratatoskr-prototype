@@ -3,7 +3,7 @@ import logging
 from telegram import Update
 from telegram.ext import ContextTypes
 from filters.code_question_filter import OpenAiCodeGenFilter
-from filters.context_saving_filter import ContextSavingFilter
+from filters.context.filter import ContextSavingFilter
 from filters.duck_duck_go.filter import DuckDuckFilter
 from filters.notion.notion_filter import NotionFilter
 
@@ -12,7 +12,7 @@ from message_handler.message_types import RequestMessage
 from repositories.user import get_user_from_db
 
 filters = [ContextSavingFilter([
-    NotionFilter(),
+    # NotionFilter(),
     DuckDuckFilter(),
     OpenAiQuestionFilter([OpenAiCodeGenFilter()])
 ])]
