@@ -30,6 +30,17 @@ class UserRepository():
             logger.error(f'Failed to get user from db: {e}')
             return None
         
+    def get_by_telegram_username(self, telegram_username):
+        try:
+            with self.engine.connect() as conn:
+                select_stmt = user_table.select().where(user_table.c.telegram_username == telegram_username)
+                result = conn.execute(select_stmt)
+                for row in result:
+                    return row
+        except Exception as e:
+            logger.error(f'Failed to get user from db: {e}')
+            return None
+        
 if __name__ == '__main__':
     # Query the 'user' table and print the results
     logging.basicConfig(

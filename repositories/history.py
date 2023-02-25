@@ -30,9 +30,8 @@ class HistoryRepository(Repository):
 
     def save(self, id: int, item: History):
         try:
-            app_id = item.app_id if item.app_id is not None else -1
             c = conn.cursor()
-            c.execute('INSERT INTO history (user_id, question, answer, app_id) VALUES (?, ?, ?, ?)', (id, item.question, item.answer, app_id))
+            c.execute('INSERT INTO history (user_id, question, answer) VALUES (?, ?, ?)', (id, item.question, item.answer))
             conn.commit()
             return
         except Exception as e:
