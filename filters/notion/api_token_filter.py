@@ -5,7 +5,7 @@ import spacy
 from filters.filter_types import Filter
 from message_handler.message_types import RequestMessage, ResponseMessage
 from repositories.history import HistoryRepository
-from repositories.secrets import Secret, SecretRepository
+from repositories.secret import Secret, SecretRepository
 
 logger = logging.getLogger(__name__)
 nlp = spacy.load("en_core_web_sm")

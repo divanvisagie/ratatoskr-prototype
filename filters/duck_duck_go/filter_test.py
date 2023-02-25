@@ -12,7 +12,6 @@ positive_sentences = [
     "Can you find the documentation?",
 ]
 
-
 class TestNotionFilter(unittest.TestCase):
 
     def test_applies_to(self):

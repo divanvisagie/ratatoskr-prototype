@@ -9,7 +9,7 @@ from filters.notion.model import save_requested
 from message_handler.message_types import RequestMessage, ResponseMessage
 from repositories.app import AppRepository
 from repositories.history import HistoryRepository
-from repositories.secrets import Secret, SecretRepository
+from repositories.secret import Secret, SecretRepository
 TOKEN_REQUEST_MESSAGE = """
 I can save messages in Notion if you give me a token.
 You can create the token by:
