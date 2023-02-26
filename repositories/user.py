@@ -16,8 +16,10 @@ user_table = Table('user', metadata,
 
 class UserRepository():
     def __init__(self):
-        config = Config("alembic.ini")
-        self.engine = create_engine(config.get_main_option("sqlalchemy.url"))
+        try:
+            self.engine = create_engine("postgresql://user:pass@localhost:5432/muninn")
+        except Exception as e:
+            logger.error(f'Failed to connect to db: {e}')
     
     def get_by_id(self, id):
         try:

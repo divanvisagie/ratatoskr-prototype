@@ -74,14 +74,17 @@ class NotionFilter (Filter):
         ]
 
     def applies_to(self, msg: RequestMessage):
-
-        applies_to_subfilter = False
-        for filter in self.filters:
-            if filter.applies_to(msg):
-                logger.info(f'Applies to subfilter {filter}')
-                applies_to_subfilter = True
-    
-        return applies_to_subfilter | save_requested(msg.text)
+        try:
+            applies_to_subfilter = False
+            for filter in self.filters:
+                if filter.applies_to(msg):
+                    logger.info(f'Applies to subfilter {filter}')
+                    applies_to_subfilter = True
+        
+            return applies_to_subfilter | save_requested(msg.text)
+        except Exception as e:
+            logger.error(f'Failed to determine if filter applies: {e}')
+            return False
 
     def process(self, msg: RequestMessage) -> ResponseMessage:
         logger.info(f'Context saved for user {msg.user_id}')
@@ -93,7 +96,7 @@ class NotionFilter (Filter):
 
         message_to_save = msg.text
         if should_save_previous_message(msg.text):
-            message_to_save = self.history_repository.get_by_id(msg.user_id)[0].answer
+            message_to_save = self.history_repository.get_by_id(msg.user_id, 1)[0].answer
 
         try:
             url = add_entry_to_todays_page(message_to_save)

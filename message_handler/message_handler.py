@@ -27,9 +27,10 @@ async def handle_incoming_telegram_message(update: Update, context: ContextTypes
         await update.message.reply_text('We do not support replies yet')
         return
 
-    user = UserRepository().get_by_telegram_username(update.message.from_user.username)
+    user_repo = UserRepository()
+    user =  user_repo.get_by_telegram_username(update.message.from_user.username)
     if user is None:
-        logger.warning('User not found')
+        logger.warning(f'User not found "{update.message.from_user.username}"')
         await update.message.reply_text('YOU SHALL NOT PASS!')
         return
 
@@ -37,13 +38,14 @@ async def handle_incoming_telegram_message(update: Update, context: ContextTypes
     rm = RequestMessage.from_telegram_message(update.message, user.id)
     for filter in filters:
         if filter.applies_to(rm):
-            logger.info(f'Found applicable filter {filter}')
+            logger.info(f'Filter {filter.__class__.__name__} applies to message')
             try:
                 ans = filter.process(rm)
                 await update.message.reply_text(text=ans.text, parse_mode='Markdown')
                 return
             except Exception as e:
                 print(f'Failed to process message: {e}')
+                await update.message.reply_text('Something went wrong. I could not find a good reply.')
                 return
            
     await update.message.reply_text('Could not process your message.')

@@ -36,6 +36,8 @@ class OpenAiQuestionFilter (Filter):
         return True
 
     def process(self, msg: RequestMessage) -> ResponseMessage:
+        user_query = msg.text
+        logger.info(f'{self.__class__.__name__} Processing message: {user_query}')
         for filter in self.filters:
             if filter.applies_to(msg):
                 return filter.process(msg)

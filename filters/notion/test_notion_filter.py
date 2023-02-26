@@ -1,5 +1,8 @@
 import os
 import sys
+from filters.notion.notion_filter import NotionFilter
+
+from message_handler.message_types import RequestMessage
 sys.path.insert(1, os.getcwd())
 
 import logging
@@ -29,6 +32,11 @@ def test_should_save_previous_message():
     actual = notion_filter.should_save_previous_message("save this: https://www.youtube.com/watch?v=dQw4w9WgXcQ")
     assert actual == False
     
+def test_applies_to():
+    # Arrange
+    rm = RequestMessage("save that please", 1)
+    nf = NotionFilter()
+    assert nf.applies_to(rm) == True
 if __name__ == '__main__':
     logging.basicConfig(
         format="%(asctime)s - %(name)s - %(levelname)s - %(message)s", level=logging.INFO

@@ -19,9 +19,11 @@ class ContextSavingFilter (Filter):
 
     def process(self, msg: RequestMessage):
         user_query = msg.text
-    
+        logger.info(f'{self.__class__.__name__} Processing message: {user_query}')
         for filter in self.filters:
+            logger.info(f'Checking if filter {filter.__class__.__name__} applies')
             if filter.applies_to(msg):
+                logger.info(f'Applying filter {filter.__class__.__name__}')
                 response =  filter.process(msg)
                 app_response = response.app_response if response.app_response is not None else response.text
                 try: 
