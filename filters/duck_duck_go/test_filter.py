@@ -13,8 +13,6 @@ positive_sentences = [
     "I don't know the answer to that, but I'm sure a quick search on the internet or asking a fellow raven who may be more knowledgeable on the subject will help you find the answer you seek. Good luck!",
 ]
 
-
-
 def test_applies_to():
     filter = DuckDuckFilter()
     for sentence in positive_sentences:

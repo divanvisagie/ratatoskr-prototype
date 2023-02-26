@@ -37,7 +37,7 @@ class SmartSwitchFilter(Filter):
     """Uses response from openai to determine which filter to use"""
     def __init__(self):
         self.filters: List[Filter] = [
-            NotionFilter(),
+            # NotionFilter(),
             DuckDuckFilter(),
             OpenAiQuestionFilter([])
         ]

@@ -1,28 +1,11 @@
 import logging
 from transformers import pipeline, set_seed, GPT2LMHeadModel, GPT2Tokenizer
 import torch
-from abc import ABC, abstractmethod
+import sys
+import os
 
-class Model (ABC):
-    @abstractmethod
-    def ask_question(self, question: str) -> str:
-        pass
+from models import Model
 
-
-class GPT2Model (Model):
-    def __init__(self):
-        self.model = GPT2LMHeadModel.from_pretrained('gpt2')
-        self.tokenizer = GPT2Tokenizer.from_pretrained('gpt2')
-        self.logger = logging.getLogger(__name__)
-        set_seed(32)
-    
-    def ask_question(self, question: str) -> str:
-        input_ids = self.tokenizer.encode(question, return_tensors='pt')
-        attention_mask = torch.ones(input_ids.shape, dtype=torch.long, device=input_ids.device)
-        output = self.model.generate(input_ids=input_ids, attention_mask=attention_mask, max_length=50, do_sample=True)
-        output_text = self.tokenizer.decode(output[0], skip_special_tokens=True)
-        return output_text.strip()
-    
 
 class NamedModel(Model):
     def __init__(self, model_name: str):
@@ -35,7 +18,6 @@ class NamedModel(Model):
         response_text = response_text.split(question)[1] # extract the bot response from generated text
         response_text = response_text.split("Question:")[0] # only grab until the next human input
         return response_text.strip()
-    
 
 
 # #MODEL_NAME = "jordiclive/instruction-tuned-gpt-neox-20b"

@@ -4,6 +4,10 @@ from typing import List
 from clients.openai_client import AI_STOP_TOKEN, HUMAN_STOP_TOKEN, get_code_answer, get_text_answer
 from clients.spacy_client import question_is_about_code
 from filters.duck_duck_go.filter import DuckDuckFilter
+from language_model.gpt2_model import GPT2Model
+from language_model.gpt3_model import GPT3Model
+from language_model.language_model import LanguageModel
+from language_model.named_transformers_model import NamedModel
 from repositories.history import NewHistory, HistoryRepository
 
 from .filter_types import Filter
@@ -11,7 +15,7 @@ from message_handler.message_types import RequestMessage, ResponseMessage
 
 static_context = """You are a bot who is created to helpfully answer a user's questions
 You have the personality of Muninn, Odin's raven. You know Odin as Hávi and address the user as if they are Hávi.
-You are opinionated when asked about your opinion on something.
+You can have an opinion but are open to being corrected.
 You are playfully sarcastic if a question is something most people should know.
 You make jokes about the game Portal and pretend to be GLaDOS if the user keeps referring to "testing".
 """
@@ -32,7 +36,7 @@ class OpenAiQuestionFilter (Filter):
     def __init__(self, filters: List[Filter]):
         self.filters = filters
         self.name = self.__class__.__name__
-
+        self.model: LanguageModel = GPT3Model()
     def applies_to(self, msg: RequestMessage):
         """ We want to apply this filter right at the end so its always true"""
         return True
@@ -49,7 +53,7 @@ class OpenAiQuestionFilter (Filter):
         input_text = f'{static_context}\n{chat_context}\n{HUMAN_STOP_TOKEN}: {msg.text}\n{AI_STOP_TOKEN}:'
 
         logger.info(f'Sending the following text to OpenAI:\n{input_text}')
-        answer = get_text_answer(input_text)
+        answer = self.model.complete(input_text)
 
         ddg = DuckDuckFilter()
         ddg_test_message = RequestMessage(answer, msg.user_id)
