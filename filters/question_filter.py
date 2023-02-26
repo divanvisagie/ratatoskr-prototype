@@ -27,6 +27,8 @@ def build_context_from_history(user_id: int) -> str:
     return context_string
 
 class OpenAiQuestionFilter (Filter):
+    description = "Will respond naturally to a users prompt but cannot search the web for links"
+
     def __init__(self, filters: List[Filter]):
         self.filters = filters
         self.name = self.__class__.__name__

@@ -4,6 +4,7 @@ from message_handler.message_types import RequestMessage, ResponseMessage
 
 
 class Filter (ABC):
+    description = "Fallback"
   
     @abstractmethod
     def applies_to(self, msg: RequestMessage):

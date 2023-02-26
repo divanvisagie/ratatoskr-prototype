@@ -8,12 +8,14 @@ from filters.duck_duck_go.filter import DuckDuckFilter
 from filters.notion.notion_filter import NotionFilter
 
 from filters.question_filter import OpenAiQuestionFilter
+from filters.smart_switch.filter import SmartSwitchFilter
 from message_handler.message_types import RequestMessage
 from repositories.user import UserRepository
 
 filters = [ContextSavingFilter([
     NotionFilter(),
     DuckDuckFilter(),
+    SmartSwitchFilter(),
     OpenAiQuestionFilter([OpenAiCodeGenFilter()])
 ])]
 
