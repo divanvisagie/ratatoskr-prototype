@@ -4,7 +4,7 @@ from typing import List
 from clients.openai_client import AI_STOP_TOKEN, HUMAN_STOP_TOKEN, get_code_answer, get_text_answer
 from clients.spacy_client import question_is_about_code
 from filters.duck_duck_go.filter import DuckDuckFilter
-from repositories.history import History, HistoryRepository
+from repositories.history import NewHistory, HistoryRepository
 
 from .filter_types import Filter
 from message_handler.message_types import RequestMessage, ResponseMessage

@@ -6,14 +6,14 @@ from clients.openai_client import get_text_answer, AI_STOP_TOKEN, HUMAN_STOP_TOK
 from clients.spacy_client import print_token_details
 from filters.filter_types import Filter
 from message_handler.message_types import RequestMessage, ResponseMessage
-from repositories.history import History, HistoryRepository
+from repositories.history import NewHistory, HistoryRepository
 
 
 nlp = spacy.load("en_core_web_sm")
 
 logger = logging.getLogger(__name__)
 
-def wrap_history(last_question: History, current_question: str):
+def wrap_history(last_question: NewHistory, current_question: str):
     prompt = "Based on the following context, write a search engine query, output only the query itself:"
     middle = f"{HUMAN_STOP_TOKEN}:{last_question.question}\n{AI_STOP_TOKEN}:{last_question.answer}\n{HUMAN_STOP_TOKEN}:{current_question}"
     wrapped =  f"{prompt}\n\n{middle}"

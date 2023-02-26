@@ -19,7 +19,7 @@ depends_on = None
 def upgrade() -> None:
     op.create_table(
         'user',
-        sa.Column('id', sa.Integer, primary_key=True),
+        sa.Column('id', sa.Integer, primary_key=True, autoincrement=True),
         sa.Column('telegram_username', sa.String(255)),
         sa.Column('access_level', sa.Integer),
         sa.Column('created_at', sa.DateTime(), nullable=False, server_default=sa.text('CURRENT_TIMESTAMP')),

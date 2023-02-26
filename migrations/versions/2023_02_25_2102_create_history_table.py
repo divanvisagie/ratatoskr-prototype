@@ -19,7 +19,7 @@ depends_on = None
 def upgrade() -> None:
     op.create_table(
         'history',
-        sa.Column('id', sa.Integer, primary_key=True),
+        sa.Column('id', sa.Integer, primary_key=True, autoincrement=True),
         sa.Column('user_id', sa.Integer, nullable=False),
         sa.Column('question', sa.Text, nullable=False),
         sa.Column('answer', sa.Text, nullable=False),
