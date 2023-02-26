@@ -49,7 +49,7 @@ class DuckDuckFilter(Filter):
 
             ddg_query = get_text_answer(wrapped)
             logger.info(f"Query: {ddg_query}")
-            answer = self.ddg_client.get_duckduckgo_answer(ddg_query)
+            answer = self.ddg_client.search(ddg_query)
 
             # If answer is empty string
             if not answer:

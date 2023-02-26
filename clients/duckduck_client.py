@@ -25,10 +25,10 @@ def result_to_markdown(result: dict) -> str:
 
 class DuckDuckGoClient():
     
-    def get_duckduckgo_answer(self,question: str) -> str:
+    def search(self,search_query: str) -> str:
         """Get answer from DuckDuckGo for a query."""
         try:
-            keywords = question
+            keywords = search_query
             results = ddg(keywords, region='wt-wt', safesearch='On', time='y')
             logger.info(f"Got answer from DuckDuckGo: {results}")
 
