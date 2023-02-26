@@ -54,7 +54,7 @@ class OpenAiQuestionFilter (Filter):
         ddg = DuckDuckFilter()
         ddg_test_message = RequestMessage(answer, msg.user_id)
         if ddg.applies_to(ddg_test_message):
-            logger.info(f'OpenAI returned a question, sending to DuckDuckGo')
+            logger.info(f'OpenAI returned a question, sending to DuckDuckGo\nQuestion: {answer}')
             return ddg.process(msg.text)
 
         return ResponseMessage(answer, responding_application=self.name)
