@@ -17,7 +17,15 @@ def get_day_of_week() -> str:
 def get_time() -> str:
     return datetime.datetime.now().strftime('%H:%M')
 
-def get_todays_page() -> Optional[dict]:
+def delete_page(page_id: str):
+    children = notion.blocks.children.list(block_id=page_id).get("results")
+    for child in children:
+        notion.blocks.delete(block_id=child["id"])
+    response = notion.blocks.delete(block_id=page_id)
+    return response
+
+def get_todays_pages() -> List[dict]:
+    """Returns a list of pages for today in the user's chosen journal database"""
     try:
         response = notion.databases.query(
             database_id=database_id,
@@ -35,14 +43,23 @@ def get_todays_page() -> Optional[dict]:
             ]
         )
         logger.info(f"Found {len(response)} pages for today")
-        if response:
-            return response['results'][0]
-        return None
+        return response['results']
+    except Exception as error:
+        logger.error('Failed to get page for today', error)
+        return []
+
+def get_todays_existing_page() -> Optional[dict]:
+    """Returns the page for today if it exists, otherwise returns None"""
+    try:
+       response = get_todays_pages()
+       answer = response[0]
+       return answer
     except Exception as error:
         logger.error('Failed to get page for today', error)
         return None
 
-def create_page_for_today(extra_tags: List[str]):
+def create_new_page_for_today(extra_tags: List[str]):
+    """Creates a new page for today in the user's chosen journal database"""
     try:
         new_page = {
             "Date": {
@@ -81,10 +98,10 @@ def add_entry_to_todays_page(text: str) -> str:
     time = datetime.datetime.now().strftime("%H:%M")
     notion = Client(auth=os.environ.get("NOTION_TOKEN"))
 
-    todays_page = get_todays_page()
+    todays_page = get_todays_existing_page()
     page_id = None
     if todays_page is None:
-        res = create_page_for_today([])
+        res = create_new_page_for_today([])
         page_id = res['id']
     else:
         logger.info(f"Found page for today {todays_page}")
@@ -133,37 +150,3 @@ def add_entry_to_todays_page(text: str) -> str:
     notion.blocks.children.append(block_id=page_id, children=new_content)
 
     return todays_page['url']
-
-def create_database():
-    try:
-        parent_page_id = "10c62b0cb4664fdda8b312680638c695"
-        new_calendar = {
-            
-        }
-
-        # Create the new database
-        database_id = notion.databases.create(
-            parent={"page_id": parent_page_id},
-            type='calendar',
-            title = {
-                "plain_text": 'My Calendar'
-            },
-            properties= [
-                {
-                    "title": {
-                        "plain_text": 'Date'
-                    },
-                    "property_type": 'date'
-                },
-                {
-                'title': {
-                    "plain_text": 'Event'
-                },
-                "property_type": 'rich_text'
-                }
-            ])
-        logger.info(f"Created database with id {database_id}")
-        return True
-    except Exception as error:
-        logger.error("Failed to create database", error)
-        return False
