@@ -27,7 +27,7 @@ def get_history(history_repository: HistoryRepository, user_id: str ) -> str:
 
 class DuckDuckFilter(Filter):
 
-    description = "Performs a search on behalf of the user"
+    description = "Performs a search web on behalf of the user and returns the result, good for showing the user things, not good for summarising."
 
     def __init__(self):
         self.ddg_client = DuckDuckGoClient()

@@ -63,7 +63,7 @@ def should_save_previous_message(question: str) -> bool:
     return True
 
 class NotionFilter (Filter):
-    description = "Will save the last message the bot returned to notion for the user"
+    description = "Will save the last message the bot returned to notion for the user, should only be used if the user explicitly asks to save"
 
     def __init__(self):
         self.app_repository = AppRepository()
