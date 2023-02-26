@@ -2,7 +2,7 @@ import logging
 
 import spacy
 from clients.duckduck_client import DuckDuckGoClient
-from clients.openai_client import get_text_answer
+from clients.openai_client import get_text_answer, AI_STOP_TOKEN, HUMAN_STOP_TOKEN
 from clients.spacy_client import print_token_details
 from filters.filter_types import Filter
 from message_handler.message_types import RequestMessage, ResponseMessage
@@ -15,11 +15,15 @@ logger = logging.getLogger(__name__)
 
 def wrap_history(last_question: History, current_question: str):
     prompt = "Based on the following context, write a search engine query, output only the query itself:"
-    middle = f"User:{last_question.question}\nBot:{last_question.answer}\nUser:{current_question}"
+    middle = f"{HUMAN_STOP_TOKEN}:{last_question.question}\n{AI_STOP_TOKEN}:{last_question.answer}\n{HUMAN_STOP_TOKEN}:{current_question}"
     wrapped =  f"{prompt}\n\n{middle}"
     logger.info(f"Wrapped context: {wrapped}")
     return wrapped
 
+
+def get_history(history_repository: HistoryRepository, user_id: str ) -> str:
+    history = history_repository.get_by_id(user_id, 1)[0]
+    return history
 
 class DuckDuckFilter(Filter):
     def __init__(self):
@@ -43,9 +47,10 @@ class DuckDuckFilter(Filter):
         try:
             logger.info(f'Context saved for user {msg.user_id}')
             
-            last_qa_pair = self.history_repository.get_by_id(msg.user_id,1)[0]
-            wrapped = wrap_history(last_qa_pair, msg.text)
-            logger.info(f"Wrapped context: {wrapped}")
+           # last_qa_pair = self.history_repository.get_by_id(msg.user_id,1)[0]
+            history = get_history(self.history_repository, msg.user_id)
+            wrapped = wrap_history(history, msg.text)
+            logger.info(f"Asking OpenAI: {wrapped}")
 
             ddg_query = get_text_answer(wrapped)
             logger.info(f"Query: {ddg_query}")
