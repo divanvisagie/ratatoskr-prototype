@@ -8,10 +8,10 @@ conn = sqlite3.connect('data/muninn.db')
 logger = logging.getLogger(__name__)
 
 class History ():
-    def __init__(self, question, answer, app_id = None):
+    def __init__(self, question, answer, responder = None):
         self.question = question
         self.answer = answer
-        self.app_id = app_id
+        self.responder = responder
 
 class HistoryRepository(Repository):
     
@@ -21,9 +21,10 @@ class HistoryRepository(Repository):
         try:
             """Returns the first 10 entries from the history table for the given user"""
             c = conn.cursor()
-            c.execute(f'SELECT question, answer FROM history WHERE user_id = ? LIMIT {limit}', (id,))
+            c.execute(f'SELECT question, answer FROM history WHERE user_id = ?  ORDER BY created_at DESC LIMIT {limit}', (id,))
             result =  c.fetchall()
-            return [History(*row) for row in result]
+            history = [History(*row) for row in result]
+            return list(reversed(history))
         except Exception as e:
             logger.error(f'Failed to get history for user: {e}')
             return []
@@ -31,7 +32,7 @@ class HistoryRepository(Repository):
     def save(self, id: int, item: History):
         try:
             c = conn.cursor()
-            c.execute('INSERT INTO history (user_id, question, answer) VALUES (?, ?, ?)', (id, item.question, item.answer))
+            c.execute('INSERT INTO history (user_id, question, answer, answered_by) VALUES (?, ?, ?, ?)', (id, item.question, item.answer, item.responder))
             conn.commit()
             return
         except Exception as e:

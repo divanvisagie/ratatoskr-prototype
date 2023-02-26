@@ -42,7 +42,7 @@ class DuckDuckGoClient():
                     md = result_to_markdown(result)
                     if md is not None:
                         count += 1
-                        if count > 3:
+                        if count > 1:
                             break
                         result_message += md + '\n\n'    
                 

@@ -3,16 +3,17 @@ from typing import List
 
 from clients.openai_client import AI_STOP_TOKEN, HUMAN_STOP_TOKEN, get_code_answer, get_text_answer
 from clients.spacy_client import question_is_about_code
+from filters.duck_duck_go.filter import DuckDuckFilter
 from repositories.history import History, HistoryRepository
 
 from .filter_types import Filter
 from message_handler.message_types import RequestMessage, ResponseMessage
 
-static_context = """You are Muninn, Odin's raven. You know him as Hávi
-Along with Huginn, your purpose is to keep him informed.
-You can also answer questions for Hávi much like an ancient nord version of Google.
-When asked advice your answers should be in line with what Hávi would say.
+static_context = """You are a bot who is created to helpfully answer a user's questions
+You have the personality of Muninn, Odin's raven. You know him as Hávi and address the user as if they are him.
+You are opinionated when asked about your opinion on something.
 You are playfully sarcastic if a question is something most people should know.
+You make jokes about the game Portal and pretend to be GLaDOS if the user keeps referring to "testing".
 """
 
 logger = logging.getLogger(__name__)
@@ -22,12 +23,13 @@ def build_context_from_history(user_id: int) -> str:
     context = history_repository.get_by_id(user_id)
     context_string = ''
     for qa in context:
-        context_string += f'{HUMAN_STOP_TOKEN}: {qa.question}\n{AI_STOP_TOKEN}: {qa.answer}'
+        context_string += f'{HUMAN_STOP_TOKEN}: {qa.question}\n\n{AI_STOP_TOKEN}: {qa.answer}'
     return context_string
 
 class OpenAiQuestionFilter (Filter):
     def __init__(self, filters: List[Filter]):
         self.filters = filters
+        self.name = self.__class__.__name__
 
     def applies_to(self, msg: RequestMessage):
         """ We want to apply this filter right at the end so its always true"""
@@ -38,9 +40,17 @@ class OpenAiQuestionFilter (Filter):
             if filter.applies_to(msg):
                 return filter.process(msg)
         
-        input_text = msg.text
-        context_str = build_context_from_history(msg.user_id)
-        input_text = f'Given the context of:\n{context_str}\n\n{msg.text}'
-        input_text = f'{static_context}\n{input_text}\nMuninn:'
+        historical_context = build_context_from_history(msg.user_id)
+        chat_context = f'Given the context of:\n{historical_context}\n'
+        input_text = f'{static_context}\n{chat_context}\n{HUMAN_STOP_TOKEN}: {msg.text}\n{AI_STOP_TOKEN}:'
+
+        logger.info(f'Sending the following text to OpenAI:\n{input_text}')
         answer = get_text_answer(input_text)
-        return ResponseMessage(answer)
+
+        ddg = DuckDuckFilter()
+        ddg_test_message = RequestMessage(answer, msg.user_id)
+        if ddg.applies_to(ddg_test_message):
+            logger.info(f'OpenAI returned a question, sending to DuckDuckGo')
+            return ddg.process(msg.text)
+
+        return ResponseMessage(answer, responding_application=self.name)

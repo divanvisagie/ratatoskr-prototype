@@ -10,6 +10,7 @@ from message_handler.message_types import RequestMessage
 positive_sentences = [
     "Do you have documentation for this?",
     "Can you find the documentation?",
+    "I don't know the answer to that, but I'm sure a quick search on the internet or asking a fellow raven who may be more knowledgeable on the subject will help you find the answer you seek. Good luck!",
 ]
 
 class TestNotionFilter(unittest.TestCase):

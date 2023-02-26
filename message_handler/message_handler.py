@@ -12,7 +12,7 @@ from message_handler.message_types import RequestMessage
 from repositories.user import UserRepository
 
 filters = [ContextSavingFilter([
-    # NotionFilter(),
+    NotionFilter(),
     DuckDuckFilter(),
     OpenAiQuestionFilter([OpenAiCodeGenFilter()])
 ])]

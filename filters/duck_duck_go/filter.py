@@ -30,7 +30,7 @@ class DuckDuckFilter(Filter):
         doc = nlp(msg.text)
      
         for token in doc:
-            if token.text.lower() in {"documentation", "doc", "docs", "search", "find"}:
+            if token.text.lower() in {"documentation", "doc", "docs", "search", "find", "article"}:
                 for child in token.children:
                     print_token_details(child)
                     if child.dep_ in {"prep", "det"}:
@@ -40,13 +40,24 @@ class DuckDuckFilter(Filter):
         return False
 
     def process(self, msg: RequestMessage) -> ResponseMessage:
-        logger.info(f'Context saved for user {msg.user_id}')
-        
-        last_qa_pair = self.history_repository.get_by_id(msg.user_id,1)[0]
-        wrapped = wrap_history(last_qa_pair, msg.text)
-        logger.info(f"Wrapped context: {wrapped}")
+        try:
+            logger.info(f'Context saved for user {msg.user_id}')
+            
+            last_qa_pair = self.history_repository.get_by_id(msg.user_id,1)[0]
+            wrapped = wrap_history(last_qa_pair, msg.text)
+            logger.info(f"Wrapped context: {wrapped}")
 
-        ddg_query = get_text_answer(wrapped)
-        logger.info(f"Query: {ddg_query}")
-        answer = self.ddg_client.get_duckduckgo_answer(ddg_query)
-        return ResponseMessage(answer, "DuckDuckGo")
+            ddg_query = get_text_answer(wrapped)
+            logger.info(f"Query: {ddg_query}")
+            answer = self.ddg_client.get_duckduckgo_answer(ddg_query)
+
+            # If answer is empty string
+            if not answer:
+                 # throw an exception
+                raise Exception("No answer found")
+
+            return ResponseMessage(answer, "DuckDuckGo")
+        except Exception as e:
+            logger.error(f'Failed to searcht the web for that topic')
+            answer = "I don't know, I tried to search the web but I couldn't find anything"
+            return ResponseMessage(answer, "DuckDuckGo")

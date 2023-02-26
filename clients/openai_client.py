@@ -9,8 +9,8 @@ code_model = "code-davinci-002"
 
 logger = logging.getLogger(__name__)
 
-HUMAN_STOP_TOKEN = "Hávi:"
-AI_STOP_TOKEN = "Muninn:"
+HUMAN_STOP_TOKEN = "User"
+AI_STOP_TOKEN = "Bot"
 
 def get_text_answer(prompt):
     try:

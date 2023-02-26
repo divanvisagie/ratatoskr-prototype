@@ -25,7 +25,7 @@ class ContextSavingFilter (Filter):
                 response =  filter.process(msg)
                 app_response = response.app_response if response.app_response is not None else response.text
                 try: 
-                    self.history_repository.save(msg.user_id, History(user_query, app_response))
+                    self.history_repository.save(msg.user_id, History(user_query, app_response, response.responding_application))
                     logger.info(f'Context saved for user {msg.user_id}')
                 except Exception as e:
                     logger.error(f'Failed to save context for user {msg.user_id}: {e}')
