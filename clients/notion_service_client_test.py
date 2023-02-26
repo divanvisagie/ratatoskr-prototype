@@ -7,9 +7,9 @@ import unittest
 import notion_service_client
 
 
-class TestNotionFilter(unittest.TestCase):
-    def test_create_database(self):
-        self.assertTrue(notion_service_client.create_database())
+
+def test_create_database():
+    assert (notion_service_client.create_database()) == True
 
 if __name__ == '__main__':
     logging.basicConfig(

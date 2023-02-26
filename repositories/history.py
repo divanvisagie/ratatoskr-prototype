@@ -29,10 +29,10 @@ class HistoryRepository(Repository):
             logger.error(f'Failed to get history for user: {e}')
             return []
 
-    def save(self, id: int, item: History):
+    def save(self, user_id: int, item: History):
         try:
             c = conn.cursor()
-            c.execute('INSERT INTO history (user_id, question, answer, answered_by) VALUES (?, ?, ?, ?)', (id, item.question, item.answer, item.responder))
+            c.execute('INSERT INTO history (user_id, question, answer, answered_by) VALUES (?, ?, ?, ?)', (user_id, item.question, item.answer, item.responder))
             conn.commit()
             return
         except Exception as e:

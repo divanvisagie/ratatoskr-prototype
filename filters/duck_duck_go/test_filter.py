@@ -13,31 +13,30 @@ positive_sentences = [
     "I don't know the answer to that, but I'm sure a quick search on the internet or asking a fellow raven who may be more knowledgeable on the subject will help you find the answer you seek. Good luck!",
 ]
 
-class TestNotionFilter(unittest.TestCase):
 
-    def test_applies_to(self):
-        filter = DuckDuckFilter()
-        for sentence in positive_sentences:
-            msg = RequestMessage(
-                sentence, 
-                1
-            )
-            actual = filter.applies_to(msg)
-            self.assertTrue(actual)
 
-    def test_applies_to_negative(self):
-        filter = DuckDuckFilter()
+def test_applies_to():
+    filter = DuckDuckFilter()
+    for sentence in positive_sentences:
         msg = RequestMessage(
-            "Save that", 
+            sentence, 
             1
         )
         actual = filter.applies_to(msg)
-        self.assertFalse(actual)
+        assert actual == True
+
+def test_applies_to_negative():
+    filter = DuckDuckFilter()
+    msg = RequestMessage(
+        "Save that", 
+        1
+    )
+    actual = filter.applies_to(msg)
+    assert actual == False
 
 if __name__ == '__main__':
     logging.basicConfig(
         format="%(asctime)s - %(name)s - %(levelname)s - %(message)s", level=logging.INFO
     )
-    unittest.main()
 
 
