@@ -2,6 +2,7 @@ import logging
 from typing import List, Tuple
 
 from sqlalchemy import Column, DateTime, Integer, MetaData, String, Table, create_engine, text
+from language_model.base_model import AI_STOP_TOKEN, HUMAN_STOP_TOKEN
 
 from repositories.repository import Repository
 logger = logging.getLogger(__name__)
@@ -75,3 +76,10 @@ class HistoryRepository(object):
         except Exception as e:
             logger.error(f'Failed to save history item: {e}')
 
+def build_context_from_history(user_id: int) -> str:
+    history_repository = HistoryRepository()
+    context = history_repository.get_by_id(user_id)
+    context_string = ''
+    for qa in context:
+        context_string += f'{HUMAN_STOP_TOKEN}: {qa.question}\n\n{AI_STOP_TOKEN}: {qa.answer}'
+    return context_string

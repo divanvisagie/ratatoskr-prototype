@@ -3,7 +3,7 @@ import logging
 from os import environ
 import openai
 from clients.openai_client import AI_STOP_TOKEN
-from language_model.language_model import HUMAN_STOP_TOKEN, LanguageModel
+from language_model.base_model import HUMAN_STOP_TOKEN, BaseModel
 
 openai.api_key = TELEGRAM_BOT_TOKEN = environ['OPENAI_API_KEY']
 
@@ -14,7 +14,7 @@ text_model = "text-davinci-003"
 logger = logging.getLogger(__name__)
 
 
-class GPT3Model (LanguageModel):
+class GPT3Model (BaseModel):
     def __init__(self):
         pass
     

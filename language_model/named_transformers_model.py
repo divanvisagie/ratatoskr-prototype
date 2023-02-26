@@ -4,7 +4,7 @@ from transformers import pipeline, set_seed, GPT2LMHeadModel, GPT2Tokenizer
 import torch
 import sys
 import os
-from language_model.language_model import HUMAN_STOP_TOKEN
+from language_model.base_model import HUMAN_STOP_TOKEN
 
 
 class NamedModel(Model):

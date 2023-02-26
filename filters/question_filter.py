@@ -6,7 +6,7 @@ from clients.spacy_client import question_is_about_code
 from filters.duck_duck_go.filter import DuckDuckFilter
 from language_model.gpt2_model import GPT2Model
 from language_model.gpt3_model import GPT3Model
-from language_model.language_model import LanguageModel
+from language_model.base_model import BaseModel
 from language_model.named_transformers_model import NamedModel
 from repositories.history import NewHistory, HistoryRepository
 
@@ -36,7 +36,7 @@ class OpenAiQuestionFilter (Filter):
     def __init__(self, filters: List[Filter]):
         self.filters = filters
         self.name = self.__class__.__name__
-        self.model: LanguageModel = GPT3Model()
+        self.model: BaseModel = GPT3Model()
     def applies_to(self, msg: RequestMessage):
         """ We want to apply this filter right at the end so its always true"""
         return True
