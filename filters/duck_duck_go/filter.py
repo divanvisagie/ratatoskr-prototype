@@ -52,17 +52,18 @@ class DuckDuckFilter(Filter):
             wrapped = wrap_history(history, msg.text)
             logger.info(f"Asking OpenAI: {wrapped}")
 
-            ddg_query = get_text_answer(wrapped)
-            logger.info(f"Query: {ddg_query}")
-            answer = self.ddg_client.search(ddg_query)
+            ddg_query_string = get_text_answer(wrapped)
+            logger.info(f"Query: {ddg_query_string}")
+            answer = self.ddg_client.search(ddg_query_string)
 
             # If answer is empty string
             if not answer:
                  # throw an exception
-                raise Exception("No answer found")
-
+                answer = get_text_answer(f'The user has asked you to search for the term "{wrapped}" but nothing has been found on DuckDuckGo. Please provide a response.')
+            
+           
             return ResponseMessage(answer, "DuckDuckGo")
         except Exception as e:
-            logger.error(f'Failed to searcht the web for that topic')
+            logger.error(f'Failed to search the web for that topic {e}')
             answer = "I don't know, I tried to search the web but I couldn't find anything"
             return ResponseMessage(answer, "DuckDuckGo")
