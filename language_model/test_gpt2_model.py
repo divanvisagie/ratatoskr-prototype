@@ -16,19 +16,17 @@ logger = logging.getLogger(__name__)
 def get_completion_with_model(model, question: str) -> str:
     return model.complete(question)
 
+chat_prompt = """
+Bot: Hello, how can I help you?
+Human: What is the actor library for scala called?
+Bot: 
+"""
+
 def test_gpt2_model():
-    model = NamedModel("gpt2")
+    model = GPT2Model()
     complete = partial(get_completion_with_model, model)
 
-    user_question = "What are the different kinds of potatoes?"
-
-    # build up context
-    history_context = build_context_from_history(0)
-    #logger.info(f"History context: {history_context}")
-    
-    prompt = f"{history_context}\n{HUMAN_STOP_TOKEN}: {user_question}"
-
-    actual = complete(prompt)
+    actual = complete(chat_prompt)
     logger.info(f"Actual: {actual}")
     # assert actual == expected
 

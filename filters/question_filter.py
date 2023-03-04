@@ -5,8 +5,9 @@ from clients.openai_client import AI_STOP_TOKEN, HUMAN_STOP_TOKEN, get_code_answ
 from clients.spacy_client import question_is_about_code
 from filters.duck_duck_go.filter import DuckDuckFilter
 from language_model.gpt2_model import GPT2Model
-from language_model.gpt3_model import GPT3Model
+from language_model.gpt3_model import GPT3CompletionModel
 from language_model.base_model import BaseModel
+from language_model.gpt_chat_model import GPTChatModel
 from language_model.named_transformers_model import NamedModel
 from repositories.history import NewHistory, HistoryRepository
 
@@ -36,7 +37,7 @@ class OpenAiQuestionFilter (Filter):
     def __init__(self, filters: List[Filter]):
         self.filters = filters
         self.name = self.__class__.__name__
-        self.model: BaseModel = GPT3Model()
+        self.model: BaseModel = GPTChatModel("You are ChatGPT, a large language model trained by OpenAI. You answer questions and when the user asks code questions, you will answer with code examples in markdown format.")
     def applies_to(self, msg: RequestMessage):
         """ We want to apply this filter right at the end so its always true"""
         return True
@@ -53,7 +54,7 @@ class OpenAiQuestionFilter (Filter):
         input_text = f'{static_context}\n{chat_context}\n{HUMAN_STOP_TOKEN}: {msg.text}\n{AI_STOP_TOKEN}:'
 
         logger.info(f'Sending the following text to OpenAI:\n{input_text}')
-        answer = self.model.complete(input_text)
+        answer = self.model.complete(msg.text)
 
         ddg = DuckDuckFilter()
         ddg_test_message = RequestMessage(answer, msg.user_id)

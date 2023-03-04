@@ -14,7 +14,7 @@ text_model = "text-davinci-003"
 logger = logging.getLogger(__name__)
 
 
-class GPT3Model (BaseModel):
+class GPT3CompletionModel (BaseModel):
     def __init__(self):
         pass
     
