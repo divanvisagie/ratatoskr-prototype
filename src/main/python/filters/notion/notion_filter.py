@@ -7,7 +7,6 @@ from filters.filter_types import Filter
 from filters.notion.api_token_filter import MissingTokenFilter
 from filters.notion.model import save_requested
 from message_handler.message_types import RequestMessage, ResponseMessage
-from repositories.app import AppRepository
 from repositories.history import HistoryRepository
 from repositories.secret import Secret, SecretRepository
 TOKEN_REQUEST_MESSAGE = """
@@ -66,14 +65,11 @@ class NotionFilter (Filter):
     description = "Will save the last message the bot returned to notion for the user, should only be used if the user explicitly asks to save"
 
     def __init__(self):
-        self.app_repository = AppRepository()
-        app_id = self.app_repository.get_id_by_name("Notion")
-        self.app_id = app_id
         self.history_repository = HistoryRepository()
-        self.filters = [
-            MissingTokenFilter(app_id, API_TOKEN_REQUEST, TOKEN_REQUEST_MESSAGE, extract_token_from_message),
-            MissingTokenFilter(app_id, JOURNAL_DATABASE_REQUEST, JOURNAL_DATABASE_REQUEST_MESSAGE, extract_database_from_message)
-        ]
+        self.filters = []
+        #     MissingTokenFilter(app_id, API_TOKEN_REQUEST, TOKEN_REQUEST_MESSAGE, extract_token_from_message),
+        #     MissingTokenFilter(app_id, JOURNAL_DATABASE_REQUEST, JOURNAL_DATABASE_REQUEST_MESSAGE, extract_database_from_message)
+        # ]
 
     def applies_to(self, msg: RequestMessage):
         try:

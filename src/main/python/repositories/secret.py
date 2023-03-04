@@ -6,7 +6,6 @@ from sqlalchemy import  DateTime, create_engine, Table, Column, Integer, String,
 from alembic.config import Config
 from repositories.repository import Repository
 
-conn = sqlite3.connect('data/muninn.db')
 logger = logging.getLogger(__name__)
 
 metadata = MetaData()

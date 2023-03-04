@@ -3,7 +3,6 @@ from typing import List
 from filters.filter_types import Filter
 
 from message_handler.message_types import RequestMessage, ResponseMessage
-from repositories.app import AppRepository
 from repositories.history import NewHistory, HistoryRepository
 
 logger = logging.getLogger(__name__)
@@ -12,7 +11,6 @@ class ContextSavingFilter (Filter):
     def __init__(self, filters: List[Filter]):
         self.filters = filters
         self.history_repository = HistoryRepository()
-        self.app_repository = AppRepository()
 
     def applies_to(self, msg: RequestMessage):
         return True

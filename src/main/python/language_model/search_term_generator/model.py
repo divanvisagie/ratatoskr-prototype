@@ -4,7 +4,7 @@ import torch
 import sys
 import os
 
-from models import Model
+from src.main.python.models import Model
 
 
 class NamedModel(Model):
