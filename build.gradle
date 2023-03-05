@@ -1,9 +1,22 @@
+
+
+
+// We put this in a buildscript because it is related to build configuration
+buildscript {
+	repositories {
+		mavenCentral()
+	}
+	dependencies {
+		classpath "com.avast.gradle:gradle-docker-compose-plugin:0.16.11"
+	}
+}
+
 plugins {
 	id 'java'
 	id 'org.springframework.boot' version '3.0.4'
 	id 'io.spring.dependency-management' version '1.1.0'
 }
-
+apply plugin: 'docker-compose'
 group = 'com.divanv'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '17'
@@ -26,12 +39,15 @@ dependencies {
 
 	// Spring
 	implementation 'org.springframework.boot:spring-boot-starter-actuator'
-	implementation 'org.springframework.boot:spring-boot-starter-data-jdbc'
+//	implementation 'org.springframework.boot:spring-boot-starter-data-jdbc'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
-	implementation 'org.postgresql:postgresql'
 	implementation 'org.springframework:spring-context'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+	// Spring Data
+	implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
+
 
 	// Stanford
 	implementation 'edu.stanford.nlp:stanford-corenlp:4.3.1'
@@ -53,6 +69,8 @@ dependencies {
 	implementation 'com.typesafe.akka:akka-actor_2.13:2.6.16'
 }
 
-//tasks.named('test') {
-//	useJUnitPlatform()
-//}
+//dockerCompose.isRequiredBy(bootRun)
+//dockerCompose.isRequiredBy(test)
+tasks.named('test') {
+	useJUnitPlatform()
+}
