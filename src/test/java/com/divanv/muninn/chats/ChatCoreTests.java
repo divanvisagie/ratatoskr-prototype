@@ -18,7 +18,7 @@ public class ChatCoreTests {
         var spy = Mockito.spy(chatCore);
 
 
-        var requestMessage = new RequestMessage("Hello");
+        var requestMessage = new RequestMessage("Hello", "1");
 
         // act
         chatCore.sendMessage(requestMessage);

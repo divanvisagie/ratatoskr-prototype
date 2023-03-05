@@ -33,18 +33,8 @@ public class TelegramBotImpl extends TelegramLongPollingBot {
         String chatId = update.getMessage().getChatId().toString();
 
         if (isStandardTextMessage(update)) {
-            SendMessage message = new SendMessage();
-            message.setChatId(chatId);
-            message.setText("Hello " + username + ", I'm Muninn");
-
             var requestMessage = new RequestMessage("Got a telegram", chatId);
             myActor.tell(requestMessage, ActorRef.noSender());
-
-            try {
-                execute(message);
-            } catch (TelegramApiException e) {
-                throw new RuntimeException(e);
-            }
         }
 
         update.getMessage().getReplyToMessage();

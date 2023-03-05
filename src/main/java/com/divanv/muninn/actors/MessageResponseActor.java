@@ -6,17 +6,15 @@ import com.divanv.muninn.chats.ResponseMessage;
 import com.divanv.muninn.chats.TelegramBotImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 
-public class TelegramResponderActor extends UntypedAbstractActor {
+public class MessageResponseActor extends UntypedAbstractActor {
 
-    private Logger logger = LoggerFactory.getLogger(SmartSwitchActor.class);
+    private Logger logger = LoggerFactory.getLogger(GuardianActor.class);
 
     private void replyToTelegram(String messageText, String chatId) {
         ApplicationContext context = new AnnotationConfigApplicationContext(AkkaConfiguration.class);
@@ -29,6 +27,7 @@ public class TelegramResponderActor extends UntypedAbstractActor {
 
         try {
             bot.execute(message);
+
         } catch (TelegramApiException e) {
             throw new RuntimeException(e);
         }

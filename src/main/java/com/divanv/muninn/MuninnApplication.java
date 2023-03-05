@@ -1,9 +1,8 @@
 package com.divanv.muninn;
 
-import akka.actor.ActorRef;
 import akka.actor.ActorSystem;
 import akka.actor.Props;
-import com.divanv.muninn.actors.SmartSwitchActor;
+import com.divanv.muninn.actors.GuardianActor;
 import com.divanv.muninn.chats.TelegramBotImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,7 +25,7 @@ public class MuninnApplication {
 
 		// Start the akka system
 		var system = ActorSystem.create("Muninn");
-		var myActor = system.actorOf(Props.create(SmartSwitchActor.class));
+		var myActor = system.actorOf(Props.create(GuardianActor.class));
 
 		ApplicationContext context = new AnnotationConfigApplicationContext(AkkaConfiguration.class);
 		// Telegram bot
