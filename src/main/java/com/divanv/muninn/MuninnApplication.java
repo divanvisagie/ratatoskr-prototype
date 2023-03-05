@@ -2,7 +2,7 @@ package com.divanv.muninn;
 
 import akka.actor.ActorSystem;
 import akka.actor.Props;
-import com.divanv.muninn.actors.GuardianActor;
+import com.divanv.muninn.actors.core.GuardianActor;
 import com.divanv.muninn.chats.TelegramBotImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

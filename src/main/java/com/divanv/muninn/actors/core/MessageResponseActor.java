@@ -1,7 +1,8 @@
-package com.divanv.muninn.actors;
+package com.divanv.muninn.actors.core;
 
 import akka.actor.UntypedAbstractActor;
 import com.divanv.muninn.AkkaConfiguration;
+import com.divanv.muninn.actors.core.GuardianActor;
 import com.divanv.muninn.chats.ResponseMessage;
 import com.divanv.muninn.chats.TelegramBotImpl;
 import org.slf4j.Logger;
@@ -24,6 +25,7 @@ public class MessageResponseActor extends UntypedAbstractActor {
         SendMessage message = new SendMessage();
         message.setChatId(chatId);
         message.setText(messageText);
+        message.enableMarkdown(true);
 
         try {
             bot.execute(message);

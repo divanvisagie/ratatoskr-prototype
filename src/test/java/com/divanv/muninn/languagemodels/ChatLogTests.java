@@ -2,6 +2,7 @@ package com.divanv.muninn.languagemodels;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import com.divanv.muninn.repositories.ChatLog;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 

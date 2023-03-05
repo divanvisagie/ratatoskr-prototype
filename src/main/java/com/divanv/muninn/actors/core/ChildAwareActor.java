@@ -1,4 +1,4 @@
-package com.divanv.muninn.actors;
+package com.divanv.muninn.actors.core;
 
 import akka.actor.AbstractActor;
 import akka.actor.Actor;

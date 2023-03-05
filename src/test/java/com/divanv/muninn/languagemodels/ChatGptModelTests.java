@@ -5,9 +5,7 @@ import static org.junit.jupiter.api.Assertions.fail;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.divanv.muninn.languagemodels.ChatGptModel;
-import com.divanv.muninn.languagemodels.ChatLog;
-import com.divanv.muninn.languagemodels.LanguageModel;
+import com.divanv.muninn.repositories.ChatLog;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
