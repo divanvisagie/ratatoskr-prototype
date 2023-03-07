@@ -13,7 +13,9 @@ public abstract class ChildAwareActor extends AbstractActor {
      * @param actorClass Class of the child actor
      */
     final protected void forwardTo(Class<? extends Actor> actorClass, Object message) {
-        ActorRef childActor = getContext().actorOf(Props.create(actorClass));
-        childActor.tell(message, getSelf());
+//        ActorRef childActor = getContext().actorOf(Props.create(actorClass));
+//        childActor.tell(message, getSelf());
+
+
     }
 }

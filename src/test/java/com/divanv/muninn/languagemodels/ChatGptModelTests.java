@@ -5,7 +5,7 @@ import static org.junit.jupiter.api.Assertions.fail;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.divanv.muninn.repositories.ChatLog;
+import com.divanv.muninn.repositories.HistoryEntry;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -39,7 +39,7 @@ public class ChatGptModelTests {
         // arrange
         var prompt = "You provide search terms tor users to use in a search engine, provide only the search term for the prompt.";
         LanguageModel chatGptModel = new ChatGptModel(prompt);
-        List<ChatLog> history = new ArrayList<ChatLog>();
+        List<HistoryEntry> history = new ArrayList<HistoryEntry>();
 
         // act
         String actual = chatGptModel.setHistory(history).getAnswer("Show me the akka documentation");

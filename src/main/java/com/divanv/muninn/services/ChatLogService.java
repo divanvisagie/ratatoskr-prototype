@@ -1,7 +1,7 @@
 package com.divanv.muninn.services;
 
 
-import com.divanv.muninn.repositories.ChatLog;
+import com.divanv.muninn.repositories.HistoryEntry;
 import com.divanv.muninn.repositories.ChatLogRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,7 +15,7 @@ public class ChatLogService {
         this.chatLogRepository = chatLogRepository;
     }
 
-    public void save(ChatLog chatLog) {
+    public void save(HistoryEntry chatLog) {
         chatLogRepository.save(chatLog);
     }
 

@@ -1,21 +1,39 @@
 package com.divanv.muninn.repositories;
 
+import jakarta.persistence.*;
+import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
-
-@Document
+import java.util.Date;
+@Data
+@Entity(name = "user")
+@EntityListeners(AuditingEntityListener.class)
 public class User {
 
     @Id
-    private String id;
-    private String telegramUsername;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    public Long id;
 
-    public void setTelegramUsername(String telegramUsername) {
-        this.telegramUsername = telegramUsername;
-    }
+    @Column(name = "telegram_username")
+    public String telegramUsername;
 
-    public String getTelegramUsername() {
-        return telegramUsername;
-    }
+    @Column(name = "access_level")
+    public Integer accessLevel;
+
+    @CreatedDate
+    @Column(name = "created_at", updatable = false)
+    @Temporal(TemporalType.TIMESTAMP)
+    public Date createdAt;
+
+    @LastModifiedDate
+    @Version
+    @Column(name = "updated_at")
+    @Temporal(TemporalType.TIMESTAMP)
+    public Date updatedAt;
+
+
 }

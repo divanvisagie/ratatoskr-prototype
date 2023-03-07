@@ -8,12 +8,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.telegram.telegrambots.meta.TelegramBotsApi;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
+
+import static com.divanv.muninn.SpringExtension.SPRING_EXTENSION_PROVIDER;
 
 @SpringBootApplication
 public class MuninnApplication {
@@ -23,12 +26,24 @@ public class MuninnApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(MuninnApplication.class, args);
 
+		ApplicationContext context = new AnnotationConfigApplicationContext(AppConfiguration.class);
 		// Start the akka system
-		var system = ActorSystem.create("Muninn");
-		var myActor = system.actorOf(Props.create(GuardianActor.class));
+		//var system = ActorSystem.create("Muninn");
+		//var myActor = system.actorOf(Props.create(GuardianActor.class));
 
-		ApplicationContext context = new AnnotationConfigApplicationContext(AkkaConfiguration.class);
+//		var system = context.getBean(ActorSystem.class);
+//		var guardianActorRef = system.actorOf(SPRING_EXTENSION_PROVIDER.get(system)
+//						.props("guardianActor"), "guardianActor");
+
+
+
+
 		// Telegram bot
+
+
+
+
+
 		var bot = context.getBean(TelegramBotImpl.class);
 
 		// start the bot

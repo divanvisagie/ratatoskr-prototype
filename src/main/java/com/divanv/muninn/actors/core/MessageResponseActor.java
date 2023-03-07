@@ -1,8 +1,7 @@
 package com.divanv.muninn.actors.core;
 
 import akka.actor.UntypedAbstractActor;
-import com.divanv.muninn.AkkaConfiguration;
-import com.divanv.muninn.actors.core.GuardianActor;
+import com.divanv.muninn.AppConfiguration;
 import com.divanv.muninn.chats.ResponseMessage;
 import com.divanv.muninn.chats.TelegramBotImpl;
 import org.slf4j.Logger;
@@ -18,7 +17,7 @@ public class MessageResponseActor extends UntypedAbstractActor {
     private Logger logger = LoggerFactory.getLogger(GuardianActor.class);
 
     private void replyToTelegram(String messageText, String chatId) {
-        ApplicationContext context = new AnnotationConfigApplicationContext(AkkaConfiguration.class);
+        ApplicationContext context = new AnnotationConfigApplicationContext(AppConfiguration.class);
         // Telegram bot
         var bot = context.getBean(TelegramBotImpl.class);
 

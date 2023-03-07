@@ -1,27 +1,27 @@
 package com.divanv.muninn.actors.core;
 
-import com.divanv.muninn.AkkaConfiguration;
 import com.divanv.muninn.actors.abilities.chatgpt.ChatGptActor;
 import com.divanv.muninn.chats.RequestMessage;
 import com.divanv.muninn.chats.ResponseMessage;
-import com.divanv.muninn.chats.TelegramBotImpl;
-import com.divanv.muninn.repositories.ChatLog;
-import com.divanv.muninn.repositories.ChatLogRepository;
-import com.divanv.muninn.services.ChatLogService;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import com.divanv.muninn.repositories.HistoryEntry;
 
+//@Component
+//@Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class ContextSavingActor extends ChildAwareActor {
 
     private String question;
     private String chatId;
     private String answer;
 
+//    @Autowired
+//    private ChatLogService chatLogService;
+
     public void saveContext() {
-        ApplicationContext context = new AnnotationConfigApplicationContext(AkkaConfiguration.class);
-        var service = context.getBean(ChatLogService.class);
-        var chatLog = new ChatLog(chatId, question, answer);
-        service.save(chatLog);
+
+        var chatLog = new HistoryEntry();
+        chatLog.question = question;
+        chatLog.answer = answer;
+//        chatLogService.save(chatLog);
     }
 
     @Override

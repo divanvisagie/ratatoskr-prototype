@@ -3,8 +3,6 @@ package com.divanv.muninn.services;
 import com.divanv.muninn.repositories.User;
 import com.divanv.muninn.repositories.UserRepository;
 
-import lombok.Cleanup;
-
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
