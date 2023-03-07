@@ -19,7 +19,7 @@ public class HistoryEntry {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    public Long id;
 
     @Column(name = "user_id")
     public  Long userId;

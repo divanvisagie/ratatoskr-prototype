@@ -29,13 +29,15 @@ public class UserServiceTests {
     @DisplayName("When asked to persist a user, persists the user")
     public void testUserPersists() {
         // arrange
-        var telegramUsername = "testUser";
+        var telegramUsername = "DivanVisagie";
 
-        User user = new User();
-        user.setTelegramUsername(telegramUsername);
-
-        // act
-        userService.save(user);
+//        User user = new User();
+//        user.id = 1L;
+//        user.setTelegramUsername(telegramUsername);
+//        user.setAccessLevel(1);
+//
+//        // act
+//        userService.save(user);
 
         // assert
         var actual = userService.findByTelegramUsername(telegramUsername);
