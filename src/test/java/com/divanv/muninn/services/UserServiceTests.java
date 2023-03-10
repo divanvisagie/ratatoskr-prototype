@@ -7,20 +7,17 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Transactional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @SpringBootTest
-// @Transactional
+@Transactional
 public class UserServiceTests {
 
     @Autowired
     private UserRepository userRepository;
-
-    private void cleanup() {
-        userRepository.deleteAll();
-    }
 
     @Autowired
     private UserService userService;
@@ -30,7 +27,7 @@ public class UserServiceTests {
     public void testUserPersists() {
 
         // arrange
-        var telegramUsername = "DivanVisagie";
+        var telegramUsername = "";
 
         User user = new User();
         user.setTelegramUsername(telegramUsername);

@@ -1,9 +1,9 @@
 package com.divanv.muninn.repositories;
 
-import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.mongodb.repository.MongoRepository;
 
 import java.util.List;
 
-public interface ChatLogRepository extends CrudRepository<HistoryEntry, Long> {
-    List<HistoryEntry> findByUserId(Long userId);
+public interface ChatLogRepository extends MongoRepository<HistoryEntry, String> {
+    List<HistoryEntry> findByUserId(String userId);
 }
