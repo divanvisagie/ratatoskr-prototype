@@ -1,16 +1,12 @@
 import logging
 from typing import List
 
-from clients.openai_client import AI_STOP_TOKEN, HUMAN_STOP_TOKEN, get_code_answer, get_text_answer
-from clients.spacy_client import question_is_about_code
+from clients.openai_client import AI_STOP_TOKEN, HUMAN_STOP_TOKEN
 from filters.duck_duck_go.filter import DuckDuckFilter
 from filters.filter_types import Filter
-from language_model.gpt2_model import GPT2Model
-from language_model.gpt3_model import GPT3CompletionModel
 from language_model.base_model import BaseModel
-from language_model.gpt_chat_model import GPTChatModel
-from language_model.named_transformers_model import NamedModel
-from repositories.history import NewHistory, HistoryRepository
+from language_model.gpt_chat_model import ChatGPTModel
+from repositories.history import HistoryRepository
 
 from message_handler.message_types import RequestMessage, ResponseMessage
 
@@ -37,10 +33,7 @@ class OpenAiQuestionFilter (Filter):
     def __init__(self, filters: List[Filter]):
         self.filters = filters
         self.name = self.__class__.__name__
-        self.model: BaseModel = GPTChatModel("You are ChatGPT, a large language model trained by OpenAI. You answer questions and when the user asks code questions, you will answer with code examples in markdown format.")
-    def applies_to(self, msg: RequestMessage):
-        """ We want to apply this filter right at the end so its always true"""
-        return True
+        self.model: BaseModel = ChatGPTModel("You are ChatGPT, a large language model trained by OpenAI. You answer questions and when the user asks code questions, you will answer with code examples in markdown format.")
 
     def process(self, msg: RequestMessage) -> ResponseMessage:
         user_query = msg.text

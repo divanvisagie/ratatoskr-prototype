@@ -9,7 +9,7 @@ class Filter (ABC):
     @abstractmethod
     def applies_to(self, msg: RequestMessage):
         """Represents a filter that can be applied to a message"""
-        pass
+        return True
     
     @abstractmethod
     def process(self, msg: RequestMessage) -> ResponseMessage:

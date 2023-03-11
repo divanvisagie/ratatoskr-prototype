@@ -1,9 +1,9 @@
 import logging
 import torch
 
-from language_model.base_model import HUMAN_STOP_TOKEN, BaseModel
+from language_model.base_model import BaseModel
 
-from transformers import pipeline, set_seed, GPT2LMHeadModel, GPT2Tokenizer
+from transformers import set_seed, GPT2LMHeadModel, GPT2Tokenizer
 
 logger = logging.getLogger(__name__)
 

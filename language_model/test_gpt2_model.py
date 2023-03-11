@@ -1,10 +1,7 @@
 import logging
-import os
-import sys
 from functools import partial
 
 from language_model.gpt2_model import GPT2Model
-from repositories.history import build_context_from_history
 
 logger = logging.getLogger(__name__)
 
@@ -23,7 +20,6 @@ def test_gpt2_model():
 
     actual = complete(chat_prompt)
     logger.info(f"Actual: {actual}")
-    # assert actual == expected
 
 if __name__ == '__main__':
     logging.basicConfig(

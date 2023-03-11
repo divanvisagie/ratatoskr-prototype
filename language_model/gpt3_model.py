@@ -7,12 +7,9 @@ from language_model.base_model import HUMAN_STOP_TOKEN, BaseModel
 
 openai.api_key = TELEGRAM_BOT_TOKEN = environ['OPENAI_API_KEY']
 
-# HUMAN_STOP_TOKEN = "User"
-# AI_STOP_TOKEN = "Bot"
 text_model = "text-davinci-003"
 
 logger = logging.getLogger(__name__)
-
 
 class GPT3CompletionModel (BaseModel):
     def __init__(self):
