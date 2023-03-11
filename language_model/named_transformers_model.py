@@ -1,13 +1,12 @@
 import logging
-from openai import Model
 from transformers import pipeline, set_seed, GPT2LMHeadModel, GPT2Tokenizer
 import torch
 import sys
 import os
-from language_model.base_model import HUMAN_STOP_TOKEN
+from language_model.base_model import HUMAN_STOP_TOKEN, BaseModel
 
 
-class NamedModel(Model):
+class NamedModel(BaseModel):
     def __init__(self, model_name: str):
         self.model = pipeline('text-generation', model=model_name, do_sample=True)
         self.logger = logging.getLogger(__name__)
