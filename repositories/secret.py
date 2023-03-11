@@ -1,5 +1,6 @@
 import json
 import logging
+from bson import ObjectId
 
 import pymongo
 
@@ -37,7 +38,6 @@ class Secret (object):
             'answer': self.answer,
         }
 
-       
 class SecretRepository(object):
     def __init__(self):
         try:
@@ -49,7 +49,7 @@ class SecretRepository(object):
     
     def get_by_id(self, id) -> Secret:
         try:
-            query = { "id": id }
+            query = { "_id": ObjectId(id) }
             result = self.collection.find(query)
             for secret in result:
                 id = str(secret['_id'])

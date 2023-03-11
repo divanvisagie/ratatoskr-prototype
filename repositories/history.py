@@ -1,80 +1,80 @@
+import datetime
+import json
 import logging
-from typing import List, Tuple
+from typing import List
+from bson import ObjectId
+import pymongo
 
-from sqlalchemy import Column, DateTime, Integer, MetaData, String, Table, create_engine, text
 from language_model.base_model import AI_STOP_TOKEN, HUMAN_STOP_TOKEN
 
-from repositories.repository import Repository
 logger = logging.getLogger(__name__)
 
-metadata = MetaData()
-history_table = Table('history', metadata,
-   Column('id', Integer, primary_key=True, autoincrement=True),
-   Column('user_id', Integer, nullable=False),
-   Column('question', String, nullable=False),
-   Column('answer', String, nullable=False),
-   Column('answered_by', String, nullable=False),    
-   Column('created_at', DateTime, server_default=text('CURRENT_TIMESTAMP')),
-   Column('updated_at', DateTime, server_default=text('CURRENT_TIMESTAMP'), onupdate=text('CURRENT_TIMESTAMP'))               
-)
-
 class NewHistory ():
-    def __init__(self, question, answer, responder = None):
+    def __init__(self, user_id: str, question: str, answer: str, responder: str = None):
+        self.user_id = user_id
         self.question = question
         self.answer = answer
         self.answered_by = responder
+        self.created_at = datetime.datetime.utcnow()
+    
+    def __dict__(self):
+        return {
+            'user_id': self.user_id,
+            'question': self.question,
+            'answer': self.answer,
+            'answered_by': self.answered_by,
+            'created_at': self.created_at.isoformat(),
+        }
 
-    def __str__(self) -> str:
-        return f'{self.question} - {self.answer} by {self.answered_by}'
+class History ():
+    def __init__(self, id, user_id, question, answer, created_at):
+        self.id = id
+        self.user_id = user_id
+        self.question = question
+        self.answer = answer
+        self.created_at = created_at
+    
+    def __dict__(self):
+        return {
+            'id': self.id,
+            'user_id': self.user_id,
+            'question': self.question,
+            'answer': self.answer,
+            'created_at': self.created_at,
+        }
 
 class HistoryRepository(object):
     def __init__(self):
         try:
-            self.engine = create_engine("postgresql://user:pass@localhost:5432/muninn")
+            client = pymongo.MongoClient("mongodb://localhost:27017/")
+            db = client["muninn"]
+            self.collection = db["history"]
         except Exception as e:
             logger.error(f'Failed to connect to db: {e}')
     
-    def get_by_id(self, user_id: int, limit: int = 10) -> List[Tuple]:
+    def get_by_id(self, id: str) -> List[History]:
         try:
-            with self.engine.connect() as conn:
-                select_stmt = history_table.select().where(
-                    history_table.c.user_id == user_id
-                ).order_by(
-                    history_table.c.created_at.desc()
-                ).limit(limit)
-                result = conn.execute(select_stmt)
-               
-                history = [row for row in result]
-
-                return list(reversed(history))
+            query = { "_id": ObjectId(id) }
+            result = self.collection.find(query)
+            history: List[History] = []
+            for item in result:
+                id = str(item['_id'])
+                history.append(History(id, item['user_id'], item['question'], item['answer'], item['created_at']))
+            return history
         except Exception as e:
             logger.error(f'Failed to get history from db: {e}')
             return None
             
-    def delete_all(self, user_id: int):
-        """Delete all history for a user"""
-        try:
-            with self.engine.connect() as conn:
-                delete_stmt = history_table.delete().where(history_table.c.user_id == user_id)
-                conn.execute(delete_stmt)
-                conn.commit()
-        except Exception as e:
-            logger.error(f'Failed to delete history: {e}')
 
-    def save(self, user_id: int, item: NewHistory):
+    def save(self, item: NewHistory) -> str:
         """Save a history item for a user"""
         try:
-            with self.engine.connect() as conn:
-                insert_stmt = history_table.insert().values(
-                    user_id = user_id, 
-                    question = item.question,
-                    answer = item.answer, 
-                    answered_by = item.answered_by
-                )
-                conn.execute(insert_stmt)
-                conn.commit()
+            history_dict = json.loads(json.dumps(item.__dict__()))
+            result = self.collection.insert_one(history_dict)
+            return str(result.inserted_id)
         except Exception as e:
             logger.error(f'Failed to save history item: {e}')
+            return None
 
 def build_context_from_history(user_id: int) -> str:
     history_repository = HistoryRepository()
