@@ -1,5 +1,5 @@
 import logging
-from filter import DuckDuckFilter
+from ddg_filter import DuckDuckFilter
 from message_handler.message_types import RequestMessage
 
 positive_sentences = [

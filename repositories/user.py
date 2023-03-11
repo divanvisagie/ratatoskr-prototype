@@ -1,5 +1,6 @@
 import logging
 
+import pymongo
 from sqlalchemy import DateTime, create_engine, Table, Column, Integer, String, MetaData
 from alembic.config import Config
 
@@ -17,7 +18,9 @@ user_table = Table('user', metadata,
 class UserRepository():
     def __init__(self):
         try:
-            self.engine = create_engine("postgresql://user:pass@localhost:5432/muninn")
+            client = pymongo.MongoClient("mongodb://localhost:27017/")
+            db = client["muninn"]
+            collection = db["user"]
         except Exception as e:
             logger.error(f'Failed to connect to db: {e}')
     

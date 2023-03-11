@@ -1,5 +1,4 @@
 import logging
-import requests
 from urllib.parse import quote
 from duckduckgo_search import ddg  
 

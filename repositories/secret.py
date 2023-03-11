@@ -4,7 +4,6 @@ import sqlite3
 from confection import Config
 from sqlalchemy import  DateTime, create_engine, Table, Column, Integer, String, MetaData, text
 from alembic.config import Config
-from .repository import Repository
 
 logger = logging.getLogger(__name__)
 

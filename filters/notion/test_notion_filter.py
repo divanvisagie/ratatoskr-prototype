@@ -6,7 +6,6 @@ import logging
 
 import notion_filter
 
-
 def test_get_token():
     actual = notion_filter.extract_token_from_message("I got the secret secret_1234.")
     assert actual == "secret_1234"

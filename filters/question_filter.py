@@ -3,7 +3,7 @@ from typing import List
 
 from clients.openai_client import AI_STOP_TOKEN, HUMAN_STOP_TOKEN, get_code_answer, get_text_answer
 from clients.spacy_client import question_is_about_code
-from filters.duck_duck_go.filter import DuckDuckFilter
+from filters.duck_duck_go.ddg_filter import DuckDuckFilter
 from language_model.gpt2_model import GPT2Model
 from language_model.gpt3_model import GPT3CompletionModel
 from language_model.base_model import BaseModel
