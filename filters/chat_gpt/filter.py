@@ -3,7 +3,8 @@ from typing import List
 
 from clients.openai_client import AI_STOP_TOKEN, HUMAN_STOP_TOKEN, get_code_answer, get_text_answer
 from clients.spacy_client import question_is_about_code
-from filters.duck_duck_go.ddg_filter import DuckDuckFilter
+from filters.duck_duck_go.filter import DuckDuckFilter
+from filters.filter_types import Filter
 from language_model.gpt2_model import GPT2Model
 from language_model.gpt3_model import GPT3CompletionModel
 from language_model.base_model import BaseModel
@@ -11,7 +12,6 @@ from language_model.gpt_chat_model import GPTChatModel
 from language_model.named_transformers_model import NamedModel
 from repositories.history import NewHistory, HistoryRepository
 
-from .filter_types import Filter
 from message_handler.message_types import RequestMessage, ResponseMessage
 
 static_context = """You are a bot who is created to helpfully answer a user's questions

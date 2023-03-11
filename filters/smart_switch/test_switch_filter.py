@@ -1,11 +1,11 @@
 
 import logging
-from filters.duck_duck_go.ddg_filter import DuckDuckFilter
+from filters.duck_duck_go.filter import DuckDuckFilter
 
-from filters.notion.notion_filter import NotionFilter
-from filters.question_filter import OpenAiQuestionFilter
+from filters.notion.filter import NotionFilter
+from filters.chat_gpt.filter import OpenAiQuestionFilter
+from filters.smart_switch.filter import get_target_filter
 
-from smartswitch_filter import get_target_filter
 
 logger = logging.getLogger(__name__)
 

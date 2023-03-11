@@ -4,8 +4,7 @@ import re
 
 from clients.notion_service_client import add_entry_to_todays_page
 from filters.filter_types import Filter
-from .api_token_filter import MissingTokenFilter
-from .model import save_requested
+from filters.notion.model import save_requested
 from message_handler.message_types import RequestMessage, ResponseMessage
 from repositories.history import HistoryRepository
 from repositories.secret import Secret, SecretRepository

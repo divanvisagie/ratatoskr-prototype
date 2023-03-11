@@ -1,9 +1,9 @@
 import os
 from typing import List
 from clients.openai_client import get_text_answer
-from filters.duck_duck_go.ddg_filter import DuckDuckFilter
+from filters.duck_duck_go.filter import DuckDuckFilter
 from filters.filter_types import Filter
-from filters.question_filter import OpenAiQuestionFilter
+from filters.chat_gpt.filter import OpenAiQuestionFilter
 from message_handler.message_types import RequestMessage, ResponseMessage
 
 def get_prompt(question, filters: str):
