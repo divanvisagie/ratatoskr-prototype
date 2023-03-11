@@ -2,7 +2,8 @@ import os
 import sys
 
 import logging
-import notion_service_client
+
+from clients import notion_service_client
 
 logger = logging.getLogger(__name__)
 

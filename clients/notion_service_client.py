@@ -2,6 +2,7 @@ import logging
 import os
 from typing import List, Optional
 import datetime
+
 from notion_client import Client
 
 database_id = os.environ.get('NOTION_JOURNAL_DB')

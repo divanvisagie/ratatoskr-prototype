@@ -1,5 +1,5 @@
 import logging
-import spacy_client
+import clients.spacy_client
 
 def test_question_is_about_code():
     assert spacy_client.question_is_about_code("How would I write a hello world in code?") == True

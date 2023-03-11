@@ -1,9 +1,9 @@
 
 import logging
 import os
+from filters.duck_duck_go.ddg_filter import DuckDuckFilter
 
 from message_handler.message_types import RequestMessage
-from filters.duck_duck_go.filter import DuckDuckFilter
 from filters.notion.notion_filter import NotionFilter
 from filters.question_filter import OpenAiQuestionFilter
 

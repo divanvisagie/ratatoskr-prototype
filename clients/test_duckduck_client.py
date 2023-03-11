@@ -2,7 +2,8 @@ import logging
 import os
 import sys
 
-from duckduck_client import DuckDuckGoClient, result_to_markdown
+from clients.duckduck_client import DuckDuckGoClient, result_to_markdown
+
 
 logger = logging.getLogger(__name__)
 
