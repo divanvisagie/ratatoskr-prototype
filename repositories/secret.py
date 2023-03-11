@@ -1,76 +1,68 @@
+import json
 import logging
-import sqlite3
 
-from confection import Config
-from sqlalchemy import  DateTime, create_engine, Table, Column, Integer, String, MetaData, text
-from alembic.config import Config
+import pymongo
 
 logger = logging.getLogger(__name__)
 
-metadata = MetaData()
-secret_table = Table('secret', metadata,
-    Column('id', Integer, primary_key=True, autoincrement=True),
-    Column('user_id', Integer, nullable=False),
-    Column('app_id', Integer, nullable=False),
-    Column('question', String, nullable=False),
-    Column('answer', String, nullable=False),
-    Column('created_at', DateTime, server_default=text('CURRENT_TIMESTAMP')),
-    Column('updated_at', DateTime, server_default=text('CURRENT_TIMESTAMP'), onupdate=text('CURRENT_TIMESTAMP'))
-)
-
-
-class Secret (object):
+class NewSecret (object):
     def __init__(self, user_id, app_id, question, answer):
         self.user_id = user_id
         self.app_id = app_id
         self.question = question
         self.answer = answer
 
+    def __dict__(self):
+        return {
+            'user_id': self.user_id,
+            'app_id': self.app_id,
+            'question': self.question,
+            'answer': self.answer,
+        }
+    
+class Secret (object):
+    def __init__(self, id, user_id, app_id, question, answer):
+        self.id = id
+        self.user_id = user_id
+        self.app_id = app_id
+        self.question = question
+        self.answer = answer
+
+    def __dict__(self):
+        return {
+            'id': self.id,
+            'user_id': self.user_id,
+            'app_id': self.app_id,
+            'question': self.question,
+            'answer': self.answer,
+        }
+
        
 class SecretRepository(object):
     def __init__(self):
-        config = Config("alembic.ini")
-        self.engine = create_engine(config.get_main_option("sqlalchemy.url"))
+        try:
+            client = pymongo.MongoClient("mongodb://localhost:27017/")
+            db = client["muninn"]
+            self.collection = db["secret"]
+        except Exception as e:
+            logger.error(f'Failed to connect to db: {e}')
     
-    def get_by_id(self, id):
+    def get_by_id(self, id) -> Secret:
         try:
-            with self.engine.connect() as conn:
-                select_stmt = secret_table.select().where(secret_table.c.id == id)
-                result = conn.execute(select_stmt)
-                for row in result:
-                    return row
+            query = { "id": id }
+            result = self.collection.find(query)
+            for secret in result:
+                id = str(secret['_id'])
+                return Secret(id, secret['user_id'], secret['app_id'], secret['question'], secret['answer'])
         except Exception as e:
             logger.error(f'Failed to get secret from db: {e}')
             return None
 
-    def get_app_secret_for_user(self, user_id: int, app_id: int, question: str) -> Secret:
-        try:
-            with self.engine.connect() as conn:
-                select_stmt = secret_table.select().where(
-                    (secret_table.c.user_id == user_id) &
-                    (secret_table.c.app_id == app_id) &
-                    (secret_table.c.question == question)
-                )
-                result = conn.execute(select_stmt)
-                for row in result:
-                    logger.info(f'Found secret for user: {row}')
-                    return row
-        except Exception as e:
-            logger.error(f'Failed to get secret from db: {e}')
-            return None
 
-    def save(self, secret: Secret):
+    def save(self, secret: NewSecret) -> str:
         try:
-            values = {
-                'user_id': secret.user_id,
-                'app_id': secret.app_id,
-                'question': secret.question,
-                'answer': secret.answer,
-            }
-            with self.engine.connect() as conn:
-                insert_stmt = secret_table.insert().values(**values)
-                result = conn.execute(insert_stmt)
-                conn.commit()
-                logger.info(f'Secret inserted: {result.rowcount}')
+            secret_dict = json.loads(json.dumps(secret.__dict__()))
+            result = self.collection.insert_one(secret_dict)
+            return str(result.inserted_id)
         except Exception as e:
             logger.error(f'Failed to save secret for user: {e}')

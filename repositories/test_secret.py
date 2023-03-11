@@ -1,20 +1,20 @@
 import logging
-import os
-import sys
-from secret import SecretRepository, Secret
+from repositories.secret import NewSecret, SecretRepository, Secret
 
 logger = logging.getLogger(__name__)
 
-def test_secret():
+def test_save_secret():
+    # Arrange
     repo = SecretRepository()
     
-    secret = Secret(0, 1, "test_question", "test_answer")
-    repo.save(secret)
+    # Act
+    secret = NewSecret("user_id", "app_id", "question", "answer")
+    id = repo.save(secret)
+    actual = repo.get_by_id(id)
 
-    actual = repo.get_app_secret_for_user(0, 1, "test")
-    logger.info(f'comparing {actual} to {secret}')
-    assert  actual.app_id == secret.app_id
-    assert  actual.user_id == secret.user_id
+    # Assert
+    assert actual.app_id == secret.app_id
+    assert actual.user_id == secret.user_id
 
 
 if __name__ == '__main__':

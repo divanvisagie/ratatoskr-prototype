@@ -1,13 +1,7 @@
 import logging
-import unittest
-import os
-import sys
-sys.path.insert(1, os.getcwd())
 from repositories.history import NewHistory, HistoryRepository
 
-
 logger = logging.getLogger(__name__)
-
 
 def test_save_history():
     repo = HistoryRepository()
@@ -45,4 +39,3 @@ if __name__ == '__main__':
     logging.basicConfig(
         format="%(asctime)s - %(name)s - %(levelname)s - %(message)s", level=logging.INFO
     )
-    test_recall_order()

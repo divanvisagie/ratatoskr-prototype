@@ -3,13 +3,8 @@ import os
 import sys
 from functools import partial
 
-# relative imports
-sys.path.insert(1, os.getcwd())
-from gpt2_model import GPT2Model
-from named_transformers_model import NamedModel
-from base_model import HUMAN_STOP_TOKEN
+from language_model.gpt2_model import GPT2Model
 from repositories.history import build_context_from_history
-#sys.path.append('../..') # move to root folder to import module from parent
 
 logger = logging.getLogger(__name__)
 
