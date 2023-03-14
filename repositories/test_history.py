@@ -21,6 +21,17 @@ def test_save_history():
     assert len(actual) > 0
 
 
+def test_get_last_10_history_item():
+    # Arrange
+    repo = HistoryRepository()
+
+    # Act
+    repo.save(NewHistory(MOCK_USER_ID, MOCK_QUESTION, MOCK_ANSWER))
+    actual = repo.get_last_n(MOCK_USER_ID)
+
+    # Assert
+    assert len(actual) > 0
+
 if __name__ == '__main__':
     logging.basicConfig(
         format="%(asctime)s - %(name)s - %(levelname)s - %(message)s", level=logging.INFO

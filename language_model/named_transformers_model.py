@@ -1,8 +1,5 @@
 import logging
-from transformers import pipeline, set_seed, GPT2LMHeadModel, GPT2Tokenizer
-import torch
-import sys
-import os
+from transformers import pipeline
 from language_model.base_model import HUMAN_STOP_TOKEN, BaseModel
 
 

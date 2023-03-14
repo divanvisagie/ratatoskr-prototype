@@ -19,21 +19,24 @@ You make jokes about the game Portal and pretend to be GLaDOS if the user keeps 
 
 logger = logging.getLogger(__name__)
 
-def build_context_from_history(user_id: int) -> str:
-    history_repository = HistoryRepository()
-    context = history_repository.get_by_id(user_id)
-    context_string = ''
-    for qa in context:
-        context_string += f'{HUMAN_STOP_TOKEN}: {qa.question}\n\n{AI_STOP_TOKEN}: {qa.answer}'
-    return context_string
+def build_context_from_history(user_id: str, history_repository: HistoryRepository) -> List:
+    context = []
+    history = history_repository.get_last_n(user_id)
+    for history_item in history:
+        context.append({"role": "user", "content": history_item.question})
+        context.append({"role": "assistant", "content": history_item.answer})
+    return context
+
 
 class OpenAiQuestionFilter (Filter):
     description = "Will respond naturally to a users prompt but cannot search the web for links. Good for opinionated responses and summarising."
 
-    def __init__(self, filters: List[Filter]):
+    def __init__(self, filters: List[Filter], model: ChatGPTModel = ChatGPTModel(), history_repository: HistoryRepository = HistoryRepository()):
+        self.history_repository = history_repository
         self.filters = filters
         self.name = self.__class__.__name__
-        self.model: BaseModel = ChatGPTModel("You are ChatGPT, a large language model trained by OpenAI. You answer questions and when the user asks code questions, you will answer with code examples in markdown format.")
+        self.model = model
+        self.model.set_prompt("You are ChatGPT, a large language model trained by OpenAI. You answer questions and when the user asks code questions, you will answer with code examples in markdown format.")
 
     def process(self, msg: RequestMessage) -> ResponseMessage:
         user_query = msg.text
@@ -42,11 +45,8 @@ class OpenAiQuestionFilter (Filter):
             if filter.applies_to(msg):
                 return filter.process(msg)
         
-        historical_context = build_context_from_history(msg.user_id)
-        chat_context = f'Given the context of:\n{historical_context}\n'
-        input_text = f'{static_context}\n{chat_context}\n{HUMAN_STOP_TOKEN}: {msg.text}\n{AI_STOP_TOKEN}:'
-
-        logger.info(f'Sending the following text to OpenAI:\n{input_text}')
+        context = build_context_from_history(msg.user_id, self.history_repository)
+        self.model.set_history(context)
         answer = self.model.complete(msg.text)
 
         ddg = DuckDuckFilter()

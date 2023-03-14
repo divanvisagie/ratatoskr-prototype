@@ -1,4 +1,5 @@
 import logging
+from typing import List
 import openai
 
 from language_model.base_model import BaseModel
@@ -6,14 +7,22 @@ from language_model.base_model import BaseModel
 logger = logging.getLogger(__name__)
 
 class ChatGPTModel (BaseModel):
-    def __init__(self, system_prompt: str):
-        self.system_prompt = { "role": "system", "content": system_prompt }
+    def __init__(self):
+        # self.system_prompt = { "role": "system", "content": system_prompt }
+        pass
+
+    def set_prompt(self, prompt: str):
+        self.system_prompt = { "role": "system", "content": prompt }
+
+    def set_history(self, history: List):
+        self.history = history
     
     def complete(self, prompt: str) -> str:
         completion =  openai.ChatCompletion.create(
             model="gpt-3.5-turbo",
             messages=[
                 self.system_prompt,
+                *self.history,
                 { "role": "user", "content": prompt },
             ]
         )

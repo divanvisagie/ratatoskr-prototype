@@ -2,9 +2,9 @@ import telegram
 
 class RequestMessage(object):
     """Represents a user input message"""
-    def __init__(self, text: str, id: int):
+    def __init__(self, text: str, user_id: int):
         self.text = text
-        self.user_id = id
+        self.user_id = user_id
 
     def __str__(self):
         return f'RequestMessage: {self.text}'

@@ -27,7 +27,7 @@ class NewHistory ():
         }
 
 class History ():
-    def __init__(self, id, user_id, question, answer, created_at):
+    def __init__(self, id, user_id, question, answer, created_at = datetime.datetime.utcnow()):
         self.id = id
         self.user_id = user_id
         self.question = question
@@ -64,7 +64,19 @@ class HistoryRepository(object):
         except Exception as e:
             logger.error(f'Failed to get history from db: {e}')
             return None
-            
+
+    def get_last_n(self, user_id: str, n: int = 10) -> List[History]:
+        try:
+            query = { "user_id": user_id }
+            result = self.collection.find(query).sort("created_at", -1).limit(n)
+            history: List[History] = []
+            for item in result:
+                id = str(item['_id'])
+                history.append(History(id, item['user_id'], item['question'], item['answer'], item['created_at']))
+            return history
+        except Exception as e:
+            return None
+
 
     def save(self, item: NewHistory) -> str:
         """Save a history item for a user"""
