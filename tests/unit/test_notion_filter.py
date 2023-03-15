@@ -1,7 +1,7 @@
-from filters.notion.model import save_requested
-from filters.notion.filter import extract_database_from_message, extract_token_from_message, should_save_previous_message
-from filters.notion.filter import NotionFilter
 
+
+from filters.notion.filter import NotionFilter, extract_database_from_message, extract_token_from_message, should_save_previous_message
+from filters.notion.model import save_requested
 from message_handler.message_types import RequestMessage
 
 import logging

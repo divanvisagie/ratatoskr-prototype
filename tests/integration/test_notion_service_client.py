@@ -25,8 +25,3 @@ def test_create_new_page_in_journal():
     cleanup_test_pages()
     assert new_page is not None
     assert new_page['id'] is not None
-
-if __name__ == '__main__':
-    logging.basicConfig(
-        format="%(asctime)s - %(name)s - %(levelname)s - %(message)s", level=logging.INFO
-    )

@@ -37,8 +37,3 @@ def test_get_by_telegram_username():
     assert user.access_level == 1
 
     repo.deleteByTelegramUsername("UNIT_TEST")
-
-if __name__ == '__main__':
-    logging.basicConfig(
-        format="%(asctime)s - %(name)s - %(levelname)s - %(message)s", level=logging.INFO
-    )

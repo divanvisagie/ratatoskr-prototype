@@ -31,8 +31,3 @@ def test_get_last_10_history_item():
 
     # Assert
     assert len(actual) > 0
-
-if __name__ == '__main__':
-    logging.basicConfig(
-        format="%(asctime)s - %(name)s - %(levelname)s - %(message)s", level=logging.INFO
-    )

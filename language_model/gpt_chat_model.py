@@ -4,6 +4,7 @@ import openai
 
 from language_model.base_model import BaseModel
 
+
 logger = logging.getLogger(__name__)
 
 class ChatGPTModel (BaseModel):

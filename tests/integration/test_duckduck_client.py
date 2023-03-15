@@ -21,8 +21,3 @@ def test_duck_duck_go_client():
     actual = client.search("Akka Documentation")
     logger.info(f"Got answer from DuckDuckGo: {actual}")
     assert len(actual) > 0
-
-if __name__ == '__main__':
-    logging.basicConfig(
-        format="%(asctime)s - %(name)s - %(levelname)s - %(message)s", level=logging.INFO
-    )

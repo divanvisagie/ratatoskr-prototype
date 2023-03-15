@@ -15,9 +15,3 @@ def test_save_secret():
     # Assert
     assert actual.app_id == secret.app_id
     assert actual.user_id == secret.user_id
-
-
-if __name__ == '__main__':
-    logging.basicConfig(
-        format="%(asctime)s - %(name)s - %(levelname)s - %(message)s", level=logging.INFO
-    )

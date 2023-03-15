@@ -4,44 +4,26 @@ Muninn is an assistant that brings together multiple organizational, search, and
 
 ## Developer Setup
 
+The project uses [Poetry](https://python-poetry.org/docs/) to manage dependencies
+
 To set up a Python environment for Muninn, please follow these steps:
+```pwsh
+setup_dev.ps1
+```
 
-1. Create a new virtual environment for the project:
-    ```
-    $ python -m venv env
-    ```
-2. Activate the virtual environment:
-    - On Unix or Linux-based systems:
-    ```
-    $ source env/bin/activate
-    ```
-    - On Windows:
-    ```
-    env\Scripts\activate
-    ```
-3. Install the required packages for the project:
-    ```
-    $ pip install -r requirements.txt
-    ```
-    **Note:** If you add any new dependencies, be sure to update the requirements.txt file and freeze pip by running the following command:
-    ```
-    $ pip freeze > requirements.txt
-    ```
-
+### Download the english model for spacy to use
+```sh
+python -m spacy download en_core_web_sm
+```
 
 ## Running the tests
 To run all tests in the current directory and its subdirectories, use the following command:
-```
-python -m unittest discover -s .
+```sh
+poe unit
+poe integration
+poe model
 ```
 
-## Usage
-
-### Run the database migrations
-
-```
-alembic upgrade head
-```
 
 To start using Muninn, simply run the `muninn.py` file with Python:
 This will launch the Muninn prototype, which you can use to perform research and store information.

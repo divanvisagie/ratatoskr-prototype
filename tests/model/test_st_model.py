@@ -1,5 +1,7 @@
 import logging
-from named_model import SearchTermGenerator, QAPair
+
+from language_model.search_term_generator.named_model import QAPair, SearchTermGenerator
+
 
 logger = logging.getLogger(__name__)
 

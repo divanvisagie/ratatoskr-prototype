@@ -3,7 +3,7 @@ import logging
 from os import environ
 import openai
 from clients.openai_client import AI_STOP_TOKEN
-from language_model.base_model import HUMAN_STOP_TOKEN, BaseModel
+from base_model import HUMAN_STOP_TOKEN, BaseModel
 
 openai.api_key = TELEGRAM_BOT_TOKEN = environ['OPENAI_API_KEY']
 

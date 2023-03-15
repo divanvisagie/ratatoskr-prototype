@@ -1,9 +1,10 @@
 import logging
 import torch
 
+from transformers import set_seed, GPT2LMHeadModel, GPT2Tokenizer
+
 from language_model.base_model import BaseModel
 
-from transformers import set_seed, GPT2LMHeadModel, GPT2Tokenizer
 
 logger = logging.getLogger(__name__)
 
@@ -22,3 +23,10 @@ class GPT2Model (BaseModel):
         return output_text.strip()
     
 
+
+if __name__ == '__main__':
+    logging.basicConfig(
+        format="%(asctime)s - %(name)s - %(levelname)s - %(message)s", level=logging.INFO
+    )
+    model = GPT2Model()
+    actual = model.complete("Bot: Hello, how can I help you?")
