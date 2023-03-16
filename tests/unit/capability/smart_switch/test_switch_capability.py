@@ -1,8 +1,8 @@
 
 import logging
-from capability.duck_duck_go.filter import DuckDuckGoFilter
+from capability.duck_duck_go.capability import DuckDuckGoCapability
 
-from capability.notion.capability import NotionFilter
+from capability.notion.capability import NotionCapability
 from capability.chat_gpt.capability import ChatGptCapability
 from capability.smart_switch.capability import get_target_filter
 
@@ -10,8 +10,8 @@ from capability.smart_switch.capability import get_target_filter
 logger = logging.getLogger(__name__)
 
 filters =  [ 
-    NotionFilter(),
-    DuckDuckGoFilter(),
+    NotionCapability(),
+    DuckDuckGoCapability(),
     ChatGptCapability([]) 
 ]
 

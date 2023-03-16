@@ -1,6 +1,6 @@
 import logging
 from typing import List
-from capability.duck_duck_go.capability import DuckDuckGoFilter
+from capability.duck_duck_go.capability import DuckDuckGoCapability
 
 from capability.capability import Capability, find_most_applicable
 from language_model.gpt_chat_model import ChatGPTModel
@@ -48,7 +48,7 @@ class ChatGptCapability (Capability):
         self.model.set_history(context)
         answer = self.model.complete(msg.text)
 
-        ddg = DuckDuckGoFilter()
+        ddg = DuckDuckGoCapability()
         ddg_test_message = RequestMessage(answer, msg.user_id)
         if ddg.relevance_to(ddg_test_message):
             logger.info(f'OpenAI returned a question, sending to DuckDuckGo\nQuestion: {answer}')

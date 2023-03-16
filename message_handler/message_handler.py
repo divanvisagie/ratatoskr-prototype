@@ -4,8 +4,8 @@ from telegram import Update
 from telegram.ext import ContextTypes
 from capability.code_question_filter import OpenAiCodeGenFilter
 from capability.context.capability import ContextSavingFilter
-from capability.duck_duck_go.capability import DuckDuckGoFilter
-from capability.notion.capability import NotionFilter
+from capability.duck_duck_go.capability import DuckDuckGoCapability
+from capability.notion.capability import NotionCapability
 
 from capability.chat_gpt.capability import ChatGptCapability
 from capability.smart_switch.capability import SmartSwitchFilter
@@ -13,8 +13,8 @@ from message_handler.message_types import RequestMessage
 from repositories.user import UserRepository
 
 filters = [ContextSavingFilter([
-    NotionFilter(),
-    DuckDuckGoFilter(),
+    NotionCapability(),
+    DuckDuckGoCapability(),
     SmartSwitchFilter(),
     ChatGptCapability([OpenAiCodeGenFilter()])
 ])]

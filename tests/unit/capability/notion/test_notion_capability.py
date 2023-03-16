@@ -1,6 +1,6 @@
 
 
-from capability.notion.capability import NotionFilter, extract_database_from_message, extract_token_from_message, should_save_previous_message
+from capability.notion.capability import NotionCapability, extract_database_from_message, extract_token_from_message, should_save_previous_message
 from capability.notion.model import save_requested
 from message_handler.message_types import RequestMessage
 
@@ -31,7 +31,7 @@ def test_should_save_previous_message():
 def test_applies_to():
     # Arrange
     rm = RequestMessage("save that please", 1)
-    nf = NotionFilter()
+    nf = NotionCapability()
     assert nf.relevance_to(rm) == True
 if __name__ == '__main__':
     logging.basicConfig(

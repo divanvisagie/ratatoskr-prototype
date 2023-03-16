@@ -35,7 +35,7 @@ def asks_for_article_or_doc(message: str):
                     return True
     return False
 
-class DuckDuckGoFilter(Capability):
+class DuckDuckGoCapability(Capability):
 
     description = "Performs a search web on behalf of the user and returns the result, good for showing the user things, not good for summarising."
 

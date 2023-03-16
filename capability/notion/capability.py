@@ -1,14 +1,15 @@
 import logging
 import spacy
 import re
-from capability.capability import Capability, find_most_applicable
 
+from capability.capability import Capability, find_most_applicable
 from clients.notion_service_client import add_entry_to_todays_page
 from capability.notion.api_token_filter import MissingTokenFilter
 from capability.notion.model import save_requested
 from message_handler.message_types import RequestMessage, ResponseMessage
 from repositories.history import HistoryRepository
-from repositories.secret import Secret, SecretRepository
+from repositories.secret import SecretRepository
+
 TOKEN_REQUEST_MESSAGE = """
 I can save messages in Notion if you give me a token.
 You can create the token by:
@@ -61,7 +62,7 @@ def should_save_previous_message(question: str) -> bool:
         return False
     return True
 
-class NotionFilter (Capability):
+class NotionCapability (Capability):
     description = "Will save the last message the bot returned to notion for the user, should only be used if the user explicitly asks to save"
 
     def __init__(self):

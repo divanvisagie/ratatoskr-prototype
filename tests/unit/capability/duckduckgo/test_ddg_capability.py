@@ -1,5 +1,5 @@
 import logging
-from capability.duck_duck_go.filter import DuckDuckGoFilter
+from capability.duck_duck_go.capability import DuckDuckGoCapability
 from message_handler.message_types import RequestMessage
 
 positive_sentences = [
@@ -9,7 +9,7 @@ positive_sentences = [
 ]
 
 def test_applies_to():
-    filter = DuckDuckGoFilter()
+    filter = DuckDuckGoCapability()
     for sentence in positive_sentences:
         msg = RequestMessage(
             sentence, 
@@ -19,7 +19,7 @@ def test_applies_to():
         assert actual == True
 
 def test_applies_to_negative():
-    filter = DuckDuckGoFilter()
+    filter = DuckDuckGoCapability()
     msg = RequestMessage(
         "Save that", 
         1
