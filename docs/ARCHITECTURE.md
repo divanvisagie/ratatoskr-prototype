@@ -28,7 +28,7 @@ sequenceDiagram
     Context Saving Capability->>Switch Capability: User message
 
     activate Switch Capability
-    Switch Capability->>Switch Capability: Picks filter to forward to
+    Switch Capability->>Switch Capability: Picks capability to forward to
     Switch Capability->>Chosen Capability: User Message
 
     activate Chosen Capability
