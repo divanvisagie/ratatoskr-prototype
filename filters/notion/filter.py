@@ -3,7 +3,8 @@ import spacy
 import re
 
 from clients.notion_service_client import add_entry_to_todays_page
-from filters.filter_types import Filter
+from filters.filter_types import Filter, find_most_applicable
+from filters.notion.api_token_filter import MissingTokenFilter
 from filters.notion.model import save_requested
 from message_handler.message_types import RequestMessage, ResponseMessage
 from repositories.history import HistoryRepository
@@ -65,20 +66,20 @@ class NotionFilter (Filter):
 
     def __init__(self):
         self.history_repository = HistoryRepository()
-        self.filters = []
-        #     MissingTokenFilter(app_id, API_TOKEN_REQUEST, TOKEN_REQUEST_MESSAGE, extract_token_from_message),
-        #     MissingTokenFilter(app_id, JOURNAL_DATABASE_REQUEST, JOURNAL_DATABASE_REQUEST_MESSAGE, extract_database_from_message)
-        # ]
+        self.filters = [
+            MissingTokenFilter(API_TOKEN_REQUEST, TOKEN_REQUEST_MESSAGE, extract_token_from_message),
+            MissingTokenFilter(JOURNAL_DATABASE_REQUEST, JOURNAL_DATABASE_REQUEST_MESSAGE, extract_database_from_message)
+        ]
 
     def applies_to(self, msg: RequestMessage):
         try:
-            applies_to_subfilter = False
-            for filter in self.filters:
-                if filter.applies_to(msg):
-                    logger.info(f'Applies to subfilter {filter}')
-                    applies_to_subfilter = True
-        
-            return applies_to_subfilter | save_requested(msg.text)
+            filter, subfilter_confidence = find_most_applicable(self.filters, msg)
+            filter_confidence = 1.0 if save_requested(msg) else 0.0
+            if filter_confidence > subfilter_confidence:
+                return filter_confidence
+            else:
+                return subfilter_confidence
+            
         except Exception as e:
             logger.error(f'Failed to determine if filter applies: {e}')
             return False
@@ -86,11 +87,11 @@ class NotionFilter (Filter):
     def process(self, msg: RequestMessage) -> ResponseMessage:
         logger.info(f'Context saved for user {msg.user_id}')
         
-        for filter in self.filters:
-            if filter.applies_to(msg):
-                logger.info(f'Applying subfilter {filter}')
-                return filter.process(msg)
-
+        filter, subfilter_confidence = find_most_applicable(self.filters, msg)
+        if subfilter_confidence > 0.9:
+            logger.info(f'Applying subfilter {filter}')
+            return filter.process(msg)
+        
         message_to_save = msg.text
         if should_save_previous_message(msg.text):
             message_to_save = self.history_repository.get_by_id(msg.user_id, 1)[0].answer

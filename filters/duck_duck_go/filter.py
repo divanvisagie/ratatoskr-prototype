@@ -20,12 +20,22 @@ def wrap_history(last_question: NewHistory, current_question: str):
     logger.info(f"Wrapped context: {wrapped}")
     return wrapped
 
-
 def get_history(history_repository: HistoryRepository, user_id: str ) -> str:
     history = history_repository.get_by_id(user_id, 1)[0]
     return history
 
-class DuckDuckFilter(Filter):
+def asks_for_article_or_doc(message: str):
+    doc = nlp(message)
+    for token in doc:
+        if token.text.lower() in {"documentation", "doc", "docs", "search", "find", "article"}:
+            for child in token.children:
+                print_token_details(child)
+                if child.dep_ in {"prep", "det"}:
+                    logger.info(f"Found relevant child: {child} for token {token}")
+                    return True
+    return False
+
+class DuckDuckGoFilter(Filter):
 
     description = "Performs a search web on behalf of the user and returns the result, good for showing the user things, not good for summarising."
 
@@ -33,24 +43,14 @@ class DuckDuckFilter(Filter):
         self.ddg_client = DuckDuckGoClient()
         self.history_repository = HistoryRepository()
 
-    def applies_to(self, msg: RequestMessage):
-        doc = nlp(msg.text)
-     
-        for token in doc:
-            if token.text.lower() in {"documentation", "doc", "docs", "search", "find", "article"}:
-                for child in token.children:
-                    print_token_details(child)
-                    if child.dep_ in {"prep", "det"}:
-                        logger.info(f"Found relevant child: {child} for token {token}")
-                        return True
-        
-        return False
+    def applies_to(self, msg: RequestMessage) -> float:
+        if asks_for_article_or_doc(msg.text):
+            return 1.0
+        else:
+            return 0.0
 
     def process(self, msg: RequestMessage) -> ResponseMessage:
         try:
-            logger.info(f'Context saved for user {msg.user_id}')
-            
-           # last_qa_pair = self.history_repository.get_by_id(msg.user_id,1)[0]
             history = get_history(self.history_repository, msg.user_id)
             wrapped = wrap_history(history, msg.text)
             logger.info(f"Asking OpenAI: {wrapped}")

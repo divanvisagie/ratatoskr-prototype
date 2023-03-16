@@ -12,9 +12,8 @@ nlp = spacy.load("en_core_web_sm")
 
 class MissingTokenFilter (Filter):
 
-    def __init__(self, app_id: int, api_token_key: str, request_message: str, extract: Callable[[str], str]):
+    def __init__(self, api_token_key: str, request_message: str, extract: Callable[[str], str]):
         """Filter that asks for a token if the user has not yet provided one."""
-        self.app_id = app_id
         self.api_token_key = api_token_key
         self.extract = extract
         self.request_message = request_message

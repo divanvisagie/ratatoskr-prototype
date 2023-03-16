@@ -1,10 +1,8 @@
 import logging
 from typing import List
 
-from clients.openai_client import AI_STOP_TOKEN, HUMAN_STOP_TOKEN
-from filters.duck_duck_go.filter import DuckDuckFilter
-from filters.filter_types import Filter
-from language_model.base_model import BaseModel
+from filters.duck_duck_go.filter import DuckDuckGoFilter
+from filters.filter_types import Filter, find_most_applicable
 from language_model.gpt_chat_model import ChatGPTModel
 from repositories.history import HistoryRepository
 
@@ -39,17 +37,18 @@ class OpenAiQuestionFilter (Filter):
         self.model.set_prompt("You are ChatGPT, a large language model trained by OpenAI. You answer questions and when the user asks code questions, you will answer with code examples in markdown format.")
 
     def process(self, msg: RequestMessage) -> ResponseMessage:
-        user_query = msg.text
-        logger.info(f'{self.__class__.__name__} Processing message: {user_query}')
-        for filter in self.filters:
-            if filter.applies_to(msg):
-                return filter.process(msg)
+        logger.info(f'{self.__class__.__name__} Processing message: {msg.text}')
+
+        most_applicable, confidence = find_most_applicable(self.filters, msg)
+        if confidence > 0.9:
+            logger.info(f'Found a more applicable sub filter: {most_applicable.__class__.__name__} with confidence: {confidence}')
+            return most_applicable.process(msg)
         
         context = build_context_from_history(msg.user_id, self.history_repository)
         self.model.set_history(context)
         answer = self.model.complete(msg.text)
 
-        ddg = DuckDuckFilter()
+        ddg = DuckDuckGoFilter()
         ddg_test_message = RequestMessage(answer, msg.user_id)
         if ddg.applies_to(ddg_test_message):
             logger.info(f'OpenAI returned a question, sending to DuckDuckGo\nQuestion: {answer}')

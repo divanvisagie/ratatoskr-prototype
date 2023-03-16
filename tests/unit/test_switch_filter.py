@@ -1,6 +1,6 @@
 
 import logging
-from filters.duck_duck_go.filter import DuckDuckFilter
+from filters.duck_duck_go.filter import DuckDuckGoFilter
 
 from filters.notion.filter import NotionFilter
 from filters.chat_gpt.filter import OpenAiQuestionFilter
@@ -11,7 +11,7 @@ logger = logging.getLogger(__name__)
 
 filters =  [ 
     NotionFilter(),
-    DuckDuckFilter(),
+    DuckDuckGoFilter(),
     OpenAiQuestionFilter([]) 
 ]
 

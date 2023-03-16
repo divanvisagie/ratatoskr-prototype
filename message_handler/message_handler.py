@@ -4,7 +4,7 @@ from telegram import Update
 from telegram.ext import ContextTypes
 from filters.code_question_filter import OpenAiCodeGenFilter
 from filters.context.filter import ContextSavingFilter
-from filters.duck_duck_go.filter import DuckDuckFilter
+from filters.duck_duck_go.filter import DuckDuckGoFilter
 from filters.notion.filter import NotionFilter
 
 from filters.chat_gpt.filter import OpenAiQuestionFilter
@@ -14,7 +14,7 @@ from repositories.user import UserRepository
 
 filters = [ContextSavingFilter([
     NotionFilter(),
-    DuckDuckFilter(),
+    DuckDuckGoFilter(),
     SmartSwitchFilter(),
     OpenAiQuestionFilter([OpenAiCodeGenFilter()])
 ])]
