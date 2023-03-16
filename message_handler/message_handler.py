@@ -39,7 +39,7 @@ async def handle_incoming_telegram_message(update: Update, context: ContextTypes
     logger.info(f'User found: {user.id}')
     rm = RequestMessage.from_telegram_message(update.message, user.id)
     for filter in filters:
-        if filter.applies_to(rm):
+        if filter.relevance_to(rm):
             logger.info(f'Filter {filter.__class__.__name__} applies to message')
             try:
                 ans = filter.process(rm)

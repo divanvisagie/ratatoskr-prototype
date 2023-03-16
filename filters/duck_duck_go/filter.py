@@ -4,7 +4,7 @@ import spacy
 from clients.duckduck_client import DuckDuckGoClient
 from clients.openai_client import get_text_answer, AI_STOP_TOKEN, HUMAN_STOP_TOKEN
 from clients.spacy_client import print_token_details
-from filters.filter_types import Filter
+from filters.filter_types import Capability
 from message_handler.message_types import RequestMessage, ResponseMessage
 from repositories.history import NewHistory, HistoryRepository
 
@@ -35,7 +35,7 @@ def asks_for_article_or_doc(message: str):
                     return True
     return False
 
-class DuckDuckGoFilter(Filter):
+class DuckDuckGoFilter(Capability):
 
     description = "Performs a search web on behalf of the user and returns the result, good for showing the user things, not good for summarising."
 
@@ -43,7 +43,7 @@ class DuckDuckGoFilter(Filter):
         self.ddg_client = DuckDuckGoClient()
         self.history_repository = HistoryRepository()
 
-    def applies_to(self, msg: RequestMessage) -> float:
+    def relevance_to(self, msg: RequestMessage) -> float:
         if asks_for_article_or_doc(msg.text):
             return 1.0
         else:

@@ -1,18 +1,18 @@
 import logging
 from typing import List
-from filters.filter_types import Filter
+from filters.filter_types import Capability
 
 from message_handler.message_types import RequestMessage, ResponseMessage
 from repositories.history import NewHistory, HistoryRepository
 
 logger = logging.getLogger(__name__)
 
-class ContextSavingFilter (Filter):
-    def __init__(self, filters: List[Filter]):
+class ContextSavingFilter (Capability):
+    def __init__(self, filters: List[Capability]):
         self.filters = filters
         self.history_repository = HistoryRepository()
 
-    def applies_to(self, msg: RequestMessage):
+    def relevance_to(self, msg: RequestMessage):
         return True
 
     def process(self, msg: RequestMessage):
@@ -20,7 +20,7 @@ class ContextSavingFilter (Filter):
         logger.info(f'{self.__class__.__name__} Processing message: {user_query}')
         for filter in self.filters:
             logger.info(f'Checking if filter {filter.__class__.__name__} applies')
-            if filter.applies_to(msg):
+            if filter.relevance_to(msg):
                 logger.info(f'Applying filter {filter.__class__.__name__}')
                 response =  filter.process(msg)
                 app_response = response.app_response if response.app_response is not None else response.text

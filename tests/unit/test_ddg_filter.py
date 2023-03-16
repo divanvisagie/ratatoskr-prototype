@@ -15,7 +15,7 @@ def test_applies_to():
             sentence, 
             1
         )
-        actual = filter.applies_to(msg)
+        actual = filter.relevance_to(msg)
         assert actual == True
 
 def test_applies_to_negative():
@@ -24,7 +24,7 @@ def test_applies_to_negative():
         "Save that", 
         1
     )
-    actual = filter.applies_to(msg)
+    actual = filter.relevance_to(msg)
     assert actual == False
 
 if __name__ == '__main__':

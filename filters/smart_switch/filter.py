@@ -2,7 +2,7 @@ import os
 from typing import List
 from clients.openai_client import get_text_answer
 from filters.duck_duck_go.filter import DuckDuckGoFilter
-from filters.filter_types import Filter
+from filters.filter_types import Capability
 from filters.chat_gpt.filter import OpenAiQuestionFilter
 from message_handler.message_types import RequestMessage, ResponseMessage
 
@@ -19,29 +19,29 @@ def get_prompt(question, filters: str):
 
     return prompt
 
-def get_target_filter(text: str, filters: List[Filter]):
+def get_target_filter(text: str, filters: List[Capability]):
     filter_str = build_filter_list(filters)
     prompt = get_prompt(text, filter_str)
     answer = get_text_answer(prompt).strip()
     return answer
 
-def filter_to_description(filter: Filter):
+def filter_to_description(filter: Capability):
     return f'{filter.__class__.__name__}: {filter.description}'
 
-def build_filter_list(filters: List[Filter]):
+def build_filter_list(filters: List[Capability]):
     descriptions =  [filter_to_description(filter) for filter in filters]
     return os.linesep.join(descriptions)
 
-class SmartSwitchFilter(Filter):
+class SmartSwitchFilter(Capability):
     """Uses response from openai to determine which filter to use"""
     def __init__(self):
-        self.filters: List[Filter] = [
+        self.filters: List[Capability] = [
             # NotionFilter(),
             DuckDuckGoFilter(),
             OpenAiQuestionFilter([])
         ]
     
-    def applies_to(self, msg: RequestMessage):
+    def relevance_to(self, msg: RequestMessage):
         return True
     
     def process(self, msg: RequestMessage) -> ResponseMessage:

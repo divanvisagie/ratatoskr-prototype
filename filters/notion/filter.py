@@ -3,7 +3,7 @@ import spacy
 import re
 
 from clients.notion_service_client import add_entry_to_todays_page
-from filters.filter_types import Filter, find_most_applicable
+from filters.filter_types import Capability, find_most_applicable
 from filters.notion.api_token_filter import MissingTokenFilter
 from filters.notion.model import save_requested
 from message_handler.message_types import RequestMessage, ResponseMessage
@@ -61,7 +61,7 @@ def should_save_previous_message(question: str) -> bool:
         return False
     return True
 
-class NotionFilter (Filter):
+class NotionFilter (Capability):
     description = "Will save the last message the bot returned to notion for the user, should only be used if the user explicitly asks to save"
 
     def __init__(self):
@@ -71,14 +71,14 @@ class NotionFilter (Filter):
             MissingTokenFilter(JOURNAL_DATABASE_REQUEST, JOURNAL_DATABASE_REQUEST_MESSAGE, extract_database_from_message)
         ]
 
-    def applies_to(self, msg: RequestMessage):
+    def relevance_to(self, msg: RequestMessage):
         try:
-            filter, subfilter_confidence = find_most_applicable(self.filters, msg)
-            filter_confidence = 1.0 if save_requested(msg) else 0.0
-            if filter_confidence > subfilter_confidence:
-                return filter_confidence
+            filter, subfilter_relevance = find_most_applicable(self.filters, msg)
+            filter_relevance = 1.0 if save_requested(msg) else 0.0
+            if filter_relevance > subfilter_relevance:
+                return filter_relevance
             else:
-                return subfilter_confidence
+                return subfilter_relevance
             
         except Exception as e:
             logger.error(f'Failed to determine if filter applies: {e}')
@@ -87,8 +87,8 @@ class NotionFilter (Filter):
     def process(self, msg: RequestMessage) -> ResponseMessage:
         logger.info(f'Context saved for user {msg.user_id}')
         
-        filter, subfilter_confidence = find_most_applicable(self.filters, msg)
-        if subfilter_confidence > 0.9:
+        filter, subfilter_relevance = find_most_applicable(self.filters, msg)
+        if subfilter_relevance > 0.9:
             logger.info(f'Applying subfilter {filter}')
             return filter.process(msg)
         

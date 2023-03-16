@@ -2,7 +2,7 @@ import logging
 from typing import List
 
 from filters.duck_duck_go.filter import DuckDuckGoFilter
-from filters.filter_types import Filter, find_most_applicable
+from filters.filter_types import Capability, find_most_applicable
 from language_model.gpt_chat_model import ChatGPTModel
 from repositories.history import HistoryRepository
 
@@ -26,10 +26,10 @@ def build_context_from_history(user_id: str, history_repository: HistoryReposito
     return context
 
 
-class OpenAiQuestionFilter (Filter):
+class OpenAiQuestionFilter (Capability):
     description = "Will respond naturally to a users prompt but cannot search the web for links. Good for opinionated responses and summarising."
 
-    def __init__(self, filters: List[Filter], model: ChatGPTModel = ChatGPTModel(), history_repository: HistoryRepository = HistoryRepository()):
+    def __init__(self, filters: List[Capability], model: ChatGPTModel = ChatGPTModel(), history_repository: HistoryRepository = HistoryRepository()):
         self.history_repository = history_repository
         self.filters = filters
         self.name = self.__class__.__name__
@@ -50,7 +50,7 @@ class OpenAiQuestionFilter (Filter):
 
         ddg = DuckDuckGoFilter()
         ddg_test_message = RequestMessage(answer, msg.user_id)
-        if ddg.applies_to(ddg_test_message):
+        if ddg.relevance_to(ddg_test_message):
             logger.info(f'OpenAI returned a question, sending to DuckDuckGo\nQuestion: {answer}')
             return ddg.process(msg.text)
 

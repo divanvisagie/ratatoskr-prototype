@@ -1,13 +1,13 @@
 
-from filters.filter_types import Filter, find_most_applicable
+from filters.filter_types import Capability, find_most_applicable
 from message_handler.message_types import RequestMessage, ResponseMessage
 
 
-class MockFilter(Filter):
+class MockFilter(Capability):
     def __init__(self, application: float):
         self.application = application
 
-    def applies_to(self, msg: RequestMessage) -> float:
+    def relevance_to(self, msg: RequestMessage) -> float:
         return self.application
     
     def process(self, msg: RequestMessage) -> ResponseMessage:

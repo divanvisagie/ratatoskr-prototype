@@ -3,12 +3,12 @@ from typing import List, Tuple
 
 from message_handler.message_types import RequestMessage, ResponseMessage
 
-class Filter (ABC):
-    """Defines the interface for a filter"""
+class Capability (ABC):
+    """Defines the interface for a Capability"""
     description = "Not Implemented" # If not implemented then will be ignored by fallback mechanism
     
-    def applies_to(self, msg: RequestMessage) -> float:
-        """Represents a filter that can be applied to a message"""
+    def relevance_to(self, msg: RequestMessage) -> float:
+        """Checks how relevant the capability is to the message"""
         return 0.00
     
     @abstractmethod
@@ -17,7 +17,7 @@ class Filter (ABC):
         pass
 
 
-def find_most_applicable(filters: List[Filter], message: RequestMessage) -> Tuple[Filter, float]:
+def find_most_applicable(filters: List[Capability], message: RequestMessage) -> Tuple[Capability, float]:
     """
     Finds the most applicable filter in a list of filters
 
@@ -29,16 +29,16 @@ def find_most_applicable(filters: List[Filter], message: RequestMessage) -> Tupl
         Tuple[Filter, float]: The most applicable filter and the confidence of the filter's applicability
     """
     current_best = None
-    current_best_applicability = 0.0
+    current_best_relevance = 0.0
     for filter in filters:
         if current_best is None:
             current_best = filter
-            current_best_applicability = filter.applies_to(message)
+            current_best_relevance = filter.relevance_to(message)
         else:
-            applicability = filter.applies_to(message)
-            if applicability > current_best_applicability:
+            relevance = filter.relevance_to(message)
+            if relevance > current_best_relevance:
                 current_best = filter
-                current_best_applicability = applicability
+                current_best_relevance = relevance
 
-    return (current_best, current_best_applicability)
+    return (current_best, current_best_relevance)
 

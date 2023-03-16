@@ -32,7 +32,7 @@ def test_applies_to():
     # Arrange
     rm = RequestMessage("save that please", 1)
     nf = NotionFilter()
-    assert nf.applies_to(rm) == True
+    assert nf.relevance_to(rm) == True
 if __name__ == '__main__':
     logging.basicConfig(
         format="%(asctime)s - %(name)s - %(levelname)s - %(message)s", level=logging.INFO
