@@ -64,8 +64,8 @@ Since we are dealing with a system that fundamentally runs off of language model
 ### `relevance_to`
 A capability can implement this method to inform the system how relevant it is to a particular message. This is especially useful for filters that are waiting for a user response and may want to make themselves prioritised over other filters in certain situations. 
 
-### `process`
-This is the main method of a filter. It takes a `RequestMessage` and returns a `ResponseMessage`. The text of the `ResponseMessage` is then saved by the Context Saving Filter and passed back to the bot interface.
+### `apply`
+This is the main method of a capability. It takes a `RequestMessage` and returns a `ResponseMessage`. The text of both the `RequestMessage` and the `ResponseMessage` are then saved by the Context Saving Capability and passed back to the bot interface.
 
 
 # Performance considerations

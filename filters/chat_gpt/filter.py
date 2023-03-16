@@ -26,7 +26,7 @@ def build_context_from_history(user_id: str, history_repository: HistoryReposito
     return context
 
 
-class OpenAiQuestionFilter (Capability):
+class ChatGptCapability (Capability):
     description = "Will respond naturally to a users prompt but cannot search the web for links. Good for opinionated responses and summarising."
 
     def __init__(self, filters: List[Capability], model: ChatGPTModel = ChatGPTModel(), history_repository: HistoryRepository = HistoryRepository()):
@@ -36,13 +36,13 @@ class OpenAiQuestionFilter (Capability):
         self.model = model
         self.model.set_prompt("You are ChatGPT, a large language model trained by OpenAI. You answer questions and when the user asks code questions, you will answer with code examples in markdown format.")
 
-    def process(self, msg: RequestMessage) -> ResponseMessage:
+    def apply(self, msg: RequestMessage) -> ResponseMessage:
         logger.info(f'{self.__class__.__name__} Processing message: {msg.text}')
 
         most_applicable, confidence = find_most_applicable(self.filters, msg)
         if confidence > 0.9:
             logger.info(f'Found a more applicable sub filter: {most_applicable.__class__.__name__} with confidence: {confidence}')
-            return most_applicable.process(msg)
+            return most_applicable.apply(msg)
         
         context = build_context_from_history(msg.user_id, self.history_repository)
         self.model.set_history(context)
@@ -52,6 +52,6 @@ class OpenAiQuestionFilter (Capability):
         ddg_test_message = RequestMessage(answer, msg.user_id)
         if ddg.relevance_to(ddg_test_message):
             logger.info(f'OpenAI returned a question, sending to DuckDuckGo\nQuestion: {answer}')
-            return ddg.process(msg.text)
+            return ddg.apply(msg.text)
 
         return ResponseMessage(answer, responding_application=self.name)

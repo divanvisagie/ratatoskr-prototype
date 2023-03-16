@@ -3,7 +3,7 @@ import logging
 from filters.duck_duck_go.filter import DuckDuckGoFilter
 
 from filters.notion.filter import NotionFilter
-from filters.chat_gpt.filter import OpenAiQuestionFilter
+from filters.chat_gpt.filter import ChatGptCapability
 from filters.smart_switch.filter import get_target_filter
 
 
@@ -12,7 +12,7 @@ logger = logging.getLogger(__name__)
 filters =  [ 
     NotionFilter(),
     DuckDuckGoFilter(),
-    OpenAiQuestionFilter([]) 
+    ChatGptCapability([]) 
 ]
 
 def test_get_target_filter():

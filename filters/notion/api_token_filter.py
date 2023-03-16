@@ -26,7 +26,7 @@ class MissingTokenFilter (Capability):
         if last_answer == self.api_token_key and self.extract(msg.text) is not None:
             return True
 
-    def process(self, msg: RequestMessage) -> ResponseMessage:
+    def apply(self, msg: RequestMessage) -> ResponseMessage:
         if self.secret_repository.get_app_secret_for_user(msg.user_id, self.app_id, self.api_token_key) is None:
             token = self.extract(msg.text)
             if token is None:

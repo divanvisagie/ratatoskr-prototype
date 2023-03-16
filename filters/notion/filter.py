@@ -84,13 +84,13 @@ class NotionFilter (Capability):
             logger.error(f'Failed to determine if filter applies: {e}')
             return False
 
-    def process(self, msg: RequestMessage) -> ResponseMessage:
+    def apply(self, msg: RequestMessage) -> ResponseMessage:
         logger.info(f'Context saved for user {msg.user_id}')
         
         filter, subfilter_relevance = find_most_applicable(self.filters, msg)
         if subfilter_relevance > 0.9:
             logger.info(f'Applying subfilter {filter}')
-            return filter.process(msg)
+            return filter.apply(msg)
         
         message_to_save = msg.text
         if should_save_previous_message(msg.text):

@@ -13,6 +13,6 @@ class OpenAiCodeGenFilter(Capability):
         print(f'Question is about code: {answer}')
         return answer
 
-    def process(self, msg: RequestMessage) -> ResponseMessage:
+    def apply(self, msg: RequestMessage) -> ResponseMessage:
         answer = get_code_answer(msg.text)
         return ResponseMessage(answer)

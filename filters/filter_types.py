@@ -12,7 +12,7 @@ class Capability (ABC):
         return 0.00
     
     @abstractmethod
-    def process(self, msg: RequestMessage) -> ResponseMessage:
+    def apply(self, msg: RequestMessage) -> ResponseMessage:
         """Defines the logic to process the message"""
         pass
 

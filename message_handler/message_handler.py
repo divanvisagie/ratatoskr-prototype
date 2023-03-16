@@ -7,7 +7,7 @@ from filters.context.filter import ContextSavingFilter
 from filters.duck_duck_go.filter import DuckDuckGoFilter
 from filters.notion.filter import NotionFilter
 
-from filters.chat_gpt.filter import OpenAiQuestionFilter
+from filters.chat_gpt.filter import ChatGptCapability
 from filters.smart_switch.filter import SmartSwitchFilter
 from message_handler.message_types import RequestMessage
 from repositories.user import UserRepository
@@ -16,7 +16,7 @@ filters = [ContextSavingFilter([
     NotionFilter(),
     DuckDuckGoFilter(),
     SmartSwitchFilter(),
-    OpenAiQuestionFilter([OpenAiCodeGenFilter()])
+    ChatGptCapability([OpenAiCodeGenFilter()])
 ])]
 
 logger = logging.getLogger(__name__)
@@ -42,7 +42,7 @@ async def handle_incoming_telegram_message(update: Update, context: ContextTypes
         if filter.relevance_to(rm):
             logger.info(f'Filter {filter.__class__.__name__} applies to message')
             try:
-                ans = filter.process(rm)
+                ans = filter.apply(rm)
                 await update.message.reply_text(text=ans.text, parse_mode='Markdown')
                 return
             except Exception as e:

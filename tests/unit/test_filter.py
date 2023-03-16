@@ -10,7 +10,7 @@ class MockFilter(Capability):
     def relevance_to(self, msg: RequestMessage) -> float:
         return self.application
     
-    def process(self, msg: RequestMessage) -> ResponseMessage:
+    def apply(self, msg: RequestMessage) -> ResponseMessage:
         return ResponseMessage('Filter1')
 
 def applicability_case(filters, expected_filter, expected_confidence):

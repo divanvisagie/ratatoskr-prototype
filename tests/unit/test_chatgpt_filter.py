@@ -1,6 +1,6 @@
 from unittest.mock import Mock
 
-from filters.chat_gpt.filter import OpenAiQuestionFilter, build_context_from_history
+from filters.chat_gpt.filter import ChatGptCapability, build_context_from_history
 from language_model.base_model import BaseModel
 from language_model.gpt_chat_model import ChatGPTModel
 from message_handler.message_types import RequestMessage
@@ -14,7 +14,7 @@ def test_sets_prompt_on_create():
     """Test that we set the system prompt as soon as the filter is created"""
     model: BaseModel = Mock(spec=ChatGPTModel)
     repository: HistoryRepository = Mock(spec=HistoryRepository)
-    OpenAiQuestionFilter([], model, repository)
+    ChatGptCapability([], model, repository)
 
     assert model.set_prompt.called == True
 
@@ -25,11 +25,11 @@ def test_reads_history_from_repository():
     model.complete.return_value = '42'
     repository: HistoryRepository = Mock(spec=HistoryRepository)
     repository.get_last_n.return_value = []
-    filter = OpenAiQuestionFilter([], model, repository)
+    filter = ChatGptCapability([], model, repository)
 
     requestMessage: RequestMessage = RequestMessage(
         'What is the meaning of life?', MOCK_USER_ID)
-    filter.process(requestMessage)
+    filter.apply(requestMessage)
 
     assert repository.get_last_n.called == True
 

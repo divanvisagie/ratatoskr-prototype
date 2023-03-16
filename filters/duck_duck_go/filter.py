@@ -49,7 +49,7 @@ class DuckDuckGoFilter(Capability):
         else:
             return 0.0
 
-    def process(self, msg: RequestMessage) -> ResponseMessage:
+    def apply(self, msg: RequestMessage) -> ResponseMessage:
         try:
             history = get_history(self.history_repository, msg.user_id)
             wrapped = wrap_history(history, msg.text)

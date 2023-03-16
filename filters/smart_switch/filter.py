@@ -3,7 +3,7 @@ from typing import List
 from clients.openai_client import get_text_answer
 from filters.duck_duck_go.filter import DuckDuckGoFilter
 from filters.filter_types import Capability
-from filters.chat_gpt.filter import OpenAiQuestionFilter
+from filters.chat_gpt.filter import ChatGptCapability
 from message_handler.message_types import RequestMessage, ResponseMessage
 
 def get_prompt(question, filters: str):
@@ -38,16 +38,16 @@ class SmartSwitchFilter(Capability):
         self.filters: List[Capability] = [
             # NotionFilter(),
             DuckDuckGoFilter(),
-            OpenAiQuestionFilter([])
+            ChatGptCapability([])
         ]
     
     def relevance_to(self, msg: RequestMessage):
         return True
     
-    def process(self, msg: RequestMessage) -> ResponseMessage:
+    def apply(self, msg: RequestMessage) -> ResponseMessage:
         filter = get_target_filter(msg.text, self.filters)
         for f in self.filters:
             if f.__class__.__name__ == filter:
-                return f.process(msg)
+                return f.apply(msg)
 
         return  ResponseMessage("Unfortunately I cant find anything to do", self.__class__.__name__)
