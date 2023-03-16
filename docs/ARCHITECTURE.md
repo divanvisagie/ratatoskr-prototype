@@ -8,9 +8,9 @@ sequenceDiagram
 
     box Muninn
     participant message_handler
-    participant Context Saving Filter
-    participant Switch Filter
-    participant Chosen Filter
+    participant Context Saving Capability
+    participant Switch Capability
+    participant Chosen Capability
     participant History Repository
     end
    
@@ -22,25 +22,25 @@ sequenceDiagram
     Telegram->>message_handler: User message
 
     activate message_handler
-    message_handler->>Context Saving Filter: User Message
+    message_handler->>Context Saving Capability: User Message
 
-    activate Context Saving Filter
-    Context Saving Filter->>Switch Filter: User message
+    activate Context Saving Capability
+    Context Saving Capability->>Switch Capability: User message
 
-    activate Switch Filter
-    Switch Filter->>Switch Filter: Picks filter to forward to
-    Switch Filter->>Chosen Filter: User Message
+    activate Switch Capability
+    Switch Capability->>Switch Capability: Picks filter to forward to
+    Switch Capability->>Chosen Capability: User Message
 
-    activate Chosen Filter
-    Chosen Filter->>Switch Filter: Response
-    deactivate Chosen Filter
+    activate Chosen Capability
+    Chosen Capability->>Switch Capability: Response
+    deactivate Chosen Capability
     
-    Switch Filter->>Context Saving Filter: Response
-    deactivate Switch Filter
+    Switch Capability->>Context Saving Filter: Response
+    deactivate Switch Capability
  
-    Context Saving Filter->>History Repository: Save Question and Answer
-    Context Saving Filter->>message_handler: Response
-    deactivate Context Saving Filter
+    Context Saving Capability->>History Repository: Save Question and Answer
+    Context Saving Capability->>message_handler: Response
+    deactivate Context Saving Capability
 
     message_handler->>Telegram: Response
     deactivate message_handler
