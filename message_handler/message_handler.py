@@ -2,13 +2,13 @@ import logging
 
 from telegram import Update
 from telegram.ext import ContextTypes
-from filters.code_question_filter import OpenAiCodeGenFilter
-from filters.context.filter import ContextSavingFilter
-from filters.duck_duck_go.filter import DuckDuckGoFilter
-from filters.notion.filter import NotionFilter
+from capability.code_question_filter import OpenAiCodeGenFilter
+from capability.context.capability import ContextSavingFilter
+from capability.duck_duck_go.capability import DuckDuckGoFilter
+from capability.notion.capability import NotionFilter
 
-from filters.chat_gpt.filter import ChatGptCapability
-from filters.smart_switch.filter import SmartSwitchFilter
+from capability.chat_gpt.capability import ChatGptCapability
+from capability.smart_switch.capability import SmartSwitchFilter
 from message_handler.message_types import RequestMessage
 from repositories.user import UserRepository
 

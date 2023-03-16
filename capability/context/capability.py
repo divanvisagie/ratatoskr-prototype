@@ -1,6 +1,6 @@
 import logging
 from typing import List
-from filters.filter_types import Capability
+from capability.capability import Capability
 
 from message_handler.message_types import RequestMessage, ResponseMessage
 from repositories.history import NewHistory, HistoryRepository

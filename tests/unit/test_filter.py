@@ -1,5 +1,5 @@
 
-from filters.filter_types import Capability, find_most_applicable
+from capability.capability import Capability, find_most_applicable
 from message_handler.message_types import RequestMessage, ResponseMessage
 
 

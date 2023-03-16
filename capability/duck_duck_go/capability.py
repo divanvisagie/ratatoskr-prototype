@@ -1,10 +1,10 @@
 import logging
 
 import spacy
+from capability.capability import Capability
 from clients.duckduck_client import DuckDuckGoClient
 from clients.openai_client import get_text_answer, AI_STOP_TOKEN, HUMAN_STOP_TOKEN
 from clients.spacy_client import print_token_details
-from filters.filter_types import Capability
 from message_handler.message_types import RequestMessage, ResponseMessage
 from repositories.history import NewHistory, HistoryRepository
 

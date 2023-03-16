@@ -1,10 +1,10 @@
 
 import logging
-from filters.duck_duck_go.filter import DuckDuckGoFilter
+from capability.duck_duck_go.filter import DuckDuckGoFilter
 
-from filters.notion.filter import NotionFilter
-from filters.chat_gpt.filter import ChatGptCapability
-from filters.smart_switch.filter import get_target_filter
+from capability.notion.capability import NotionFilter
+from capability.chat_gpt.capability import ChatGptCapability
+from capability.smart_switch.capability import get_target_filter
 
 
 logger = logging.getLogger(__name__)

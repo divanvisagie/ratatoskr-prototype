@@ -1,6 +1,6 @@
 from unittest.mock import Mock
 
-from filters.chat_gpt.filter import ChatGptCapability, build_context_from_history
+from capability.chat_gpt.capability import ChatGptCapability, build_context_from_history
 from language_model.base_model import BaseModel
 from language_model.gpt_chat_model import ChatGPTModel
 from message_handler.message_types import RequestMessage

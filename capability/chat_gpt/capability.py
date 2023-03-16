@@ -1,8 +1,8 @@
 import logging
 from typing import List
+from capability.duck_duck_go.capability import DuckDuckGoFilter
 
-from filters.duck_duck_go.filter import DuckDuckGoFilter
-from filters.filter_types import Capability, find_most_applicable
+from capability.capability import Capability, find_most_applicable
 from language_model.gpt_chat_model import ChatGPTModel
 from repositories.history import HistoryRepository
 

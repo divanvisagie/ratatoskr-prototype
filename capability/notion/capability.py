@@ -1,11 +1,11 @@
 import logging
 import spacy
 import re
+from capability.capability import Capability, find_most_applicable
 
 from clients.notion_service_client import add_entry_to_todays_page
-from filters.filter_types import Capability, find_most_applicable
-from filters.notion.api_token_filter import MissingTokenFilter
-from filters.notion.model import save_requested
+from capability.notion.api_token_filter import MissingTokenFilter
+from capability.notion.model import save_requested
 from message_handler.message_types import RequestMessage, ResponseMessage
 from repositories.history import HistoryRepository
 from repositories.secret import Secret, SecretRepository

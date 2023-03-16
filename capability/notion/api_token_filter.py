@@ -2,7 +2,7 @@ import logging
 from typing import Callable
 import spacy
 
-from filters.filter_types import Capability
+from capability.capability import Capability
 from message_handler.message_types import RequestMessage, ResponseMessage
 from repositories.history import HistoryRepository
 from repositories.secret import Secret, SecretRepository
