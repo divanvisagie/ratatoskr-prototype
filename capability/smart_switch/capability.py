@@ -1,7 +1,7 @@
 import os
 from typing import List
 from clients.openai_client import get_text_answer
-from capability.duck_duck_go.filter import DuckDuckGoFilter
+from capability.duck_duck_go.capability import DuckDuckGoCapability
 from capability.capability import Capability
 from capability.chat_gpt.capability import ChatGptCapability
 from message_handler.message_types import RequestMessage, ResponseMessage
@@ -37,7 +37,7 @@ class SmartSwitchFilter(Capability):
     def __init__(self):
         self.filters: List[Capability] = [
             # NotionFilter(),
-            DuckDuckGoFilter(),
+            DuckDuckGoCapability(),
             ChatGptCapability([])
         ]
     

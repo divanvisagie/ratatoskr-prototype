@@ -2,7 +2,6 @@ import logging
 
 from telegram import Update
 from telegram.ext import ContextTypes
-from capability.code_question_filter import OpenAiCodeGenFilter
 from capability.context.capability import ContextSavingFilter
 from capability.duck_duck_go.capability import DuckDuckGoCapability
 from capability.notion.capability import NotionCapability
@@ -16,7 +15,7 @@ filters = [ContextSavingFilter([
     NotionCapability(),
     DuckDuckGoCapability(),
     SmartSwitchFilter(),
-    ChatGptCapability([OpenAiCodeGenFilter()])
+    ChatGptCapability([])
 ])]
 
 logger = logging.getLogger(__name__)
