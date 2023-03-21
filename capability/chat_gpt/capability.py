@@ -36,6 +36,9 @@ class ChatGptCapability (Capability):
         self.model = model
         self.model.set_prompt("You are ChatGPT, a large language model trained by OpenAI. You answer questions and when the user asks code questions, you will answer with code examples in markdown format.")
 
+    def relevance_to(self, msg: RequestMessage):
+        return 1.0
+
     def apply(self, msg: RequestMessage) -> ResponseMessage:
         logger.info(f'{self.__class__.__name__} Processing message: {msg.text}')
 

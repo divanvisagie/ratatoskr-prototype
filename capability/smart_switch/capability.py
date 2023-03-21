@@ -42,7 +42,7 @@ class SmartSwitchFilter(Capability):
         ]
     
     def relevance_to(self, msg: RequestMessage):
-        return True
+        return 0.0
     
     def apply(self, msg: RequestMessage) -> ResponseMessage:
         filter = get_target_filter(msg.text, self.filters)
