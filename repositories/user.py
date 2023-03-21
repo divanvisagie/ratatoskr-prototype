@@ -16,7 +16,7 @@ class NewUser (object):
         }
 
 class User (object):
-    def __init__(self, id, telegram_username, access_level):
+    def __init__(self, id: str, telegram_username: str, access_level: int):
         self.id = id
         self.telegram_username = telegram_username
         self.access_level = access_level
@@ -40,7 +40,7 @@ class UserRepository():
     
     def get_by_id(self, id) -> User:
         try:
-           query = { "id": id }
+           query = { "_id": id }
            result = self.collection.find(query)
            for user in result:
                id = str(user['_id'])
@@ -65,7 +65,7 @@ class UserRepository():
             # Convert the User object to a dictionary
             user_dict = json.loads(json.dumps(user.__dict__()))
             result =  self.collection.insert_one(user_dict)
-            result.inserted_id
+            return result.inserted_id
         except Exception as e:
             logger.error(f'Failed to save user to db: {e}')
             return None
