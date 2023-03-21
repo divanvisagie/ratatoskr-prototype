@@ -22,6 +22,7 @@ torch = "^2.0.0"
 torchvision = "^0.15.1"
 torchaudio = "^2.0.1"
 mypy = "^1.1.1"
+pytest-spec = "^3.2.0"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^7.2.2"
@@ -29,7 +30,7 @@ poethepoet = "^0.18.1"
 
 [tool.poe.tasks]
 integration = "pytest tests/integration"
-unit = "pytest tests/unit"
+unit = {shell = "python3 activate.py; pytest tests/unit --spec" }
 model = "pytest tests/model"
 
 

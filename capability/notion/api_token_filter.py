@@ -22,9 +22,9 @@ class MissingTokenFilter (Capability):
 
     def relevance_to(self, msg: RequestMessage):
         """Applies if the user has not yet provided token or if the message contains a token."""
-        last_answer = self.history_repository.get_by_id(msg.user_id,1)[0].answer
+        last_answer = self.history_repository.get_by_id(msg.user_id)[0].answer
         if last_answer == self.api_token_key and self.extract(msg.text) is not None:
-            return True
+            return 1.0
 
     def apply(self, msg: RequestMessage) -> ResponseMessage:
         if self.secret_repository.get_app_secret_for_user(msg.user_id, self.app_id, self.api_token_key) is None:

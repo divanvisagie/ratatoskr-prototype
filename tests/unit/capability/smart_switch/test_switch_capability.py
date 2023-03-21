@@ -17,7 +17,7 @@ filters =  [
 
 def test_get_target_filter():
     actual = get_target_filter("save that please", filters)
-    expected = "NotionFilter"
+    expected = "NotionCapability"
     assert actual == expected
 
 

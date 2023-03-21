@@ -1,11 +1,10 @@
 
-
+import pytest
 from capability.notion.capability import NotionCapability, extract_database_from_message, extract_token_from_message, should_save_previous_message
 from capability.notion.model import save_requested
 from message_handler.message_types import RequestMessage
 
 import logging
-
 
 def test_get_token():
     actual = extract_token_from_message("I got the secret secret_1234.")
@@ -27,12 +26,14 @@ def test_should_save_previous_message():
     assert actual == True
     actual = should_save_previous_message("save this: https://www.youtube.com/watch?v=dQw4w9WgXcQ")
     assert actual == False
-    
+
 def test_applies_to():
     # Arrange
     rm = RequestMessage("save that please", 1)
     nf = NotionCapability()
-    assert nf.relevance_to(rm) == True
+    actual = nf.relevance_to(rm)
+    assert actual == 1.0
+
 if __name__ == '__main__':
     logging.basicConfig(
         format="%(asctime)s - %(name)s - %(levelname)s - %(message)s", level=logging.INFO

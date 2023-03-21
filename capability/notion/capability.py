@@ -72,10 +72,10 @@ class NotionCapability (Capability):
             MissingTokenFilter(JOURNAL_DATABASE_REQUEST, JOURNAL_DATABASE_REQUEST_MESSAGE, extract_database_from_message)
         ]
 
-    def relevance_to(self, msg: RequestMessage):
+    def relevance_to(self, msg: RequestMessage) -> float:
         try:
             filter, subfilter_relevance = find_most_applicable(self.filters, msg)
-            filter_relevance = 1.0 if save_requested(msg) else 0.0
+            filter_relevance = save_requested(msg.text)
             if filter_relevance > subfilter_relevance:
                 return filter_relevance
             else:
@@ -83,7 +83,7 @@ class NotionCapability (Capability):
             
         except Exception as e:
             logger.error(f'Failed to determine if filter applies: {e}')
-            return False
+            return 0.0
 
     def apply(self, msg: RequestMessage) -> ResponseMessage:
         logger.info(f'Context saved for user {msg.user_id}')
@@ -95,7 +95,7 @@ class NotionCapability (Capability):
         
         message_to_save = msg.text
         if should_save_previous_message(msg.text):
-            message_to_save = self.history_repository.get_by_id(msg.user_id, 1)[0].answer
+            message_to_save = self.history_repository.get_by_id(msg.user_id)[0].answer
 
         try:
             url = add_entry_to_todays_page(message_to_save)
