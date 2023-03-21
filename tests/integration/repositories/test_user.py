@@ -1,4 +1,3 @@
-
 from repositories.user import UserRepository, NewUser
 
 TEST_TELEGRAM_USERNAME="test_user"
@@ -30,8 +29,10 @@ def test_UserRepository_get_user_by_telegram_name():
     id = repository.save(user)
     assert id is not None
 
-    #Act
+    # Act
     actual = repository.get_by_telegram_username(TEST_TELEGRAM_USERNAME)
+
+    # Assert
     assert actual is not None
     assert actual.telegram_username == TEST_TELEGRAM_USERNAME
     assert actual.access_level == 1
