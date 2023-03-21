@@ -15,7 +15,7 @@ def main(test_type):
     elif test_type == "model":
         target_directory = "model"
 
-    command = f"pytest tests/{target_directory} --spec"
+    command = f"pytest tests/{target_directory}"
     os.system(command)
 
 

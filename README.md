@@ -7,8 +7,20 @@ Muninn is an assistant that brings together multiple organizational, search, and
 The project uses [Poetry](https://python-poetry.org/docs/) to manage dependencies
 
 To set up a Python environment for Muninn, please follow these steps:
+
+Windows
 ```pwsh
 setup_dev.ps1
+```
+
+Linux/MacOS
+```bash
+setup_dev.sh
+```
+
+### Database
+```sh
+docker-compose up -d
 ```
 
 ### Download the english model for spacy to use
@@ -19,9 +31,9 @@ python -m spacy download en_core_web_sm
 ## Running the tests
 To run all tests in the current directory and its subdirectories, use the following command:
 ```sh
-poe unit
-poe integration
-poe model
+./test.py unit
+./test.py integration
+./test.py model
 ```
 
 
