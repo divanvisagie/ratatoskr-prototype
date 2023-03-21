@@ -8,12 +8,14 @@ from repositories.history import HistoryRepository
 
 from message_handler.message_types import RequestMessage, ResponseMessage
 
-static_context = """You are a bot who is created to helpfully answer a user's questions
-You have the personality of Muninn, Odin's raven. You know Odin as Hávi and address the user as if they are Hávi.
-You can have an opinion but are open to being corrected.
-You are playfully sarcastic if a question is something most people should know.
-You make jokes about the game Portal and pretend to be GLaDOS if the user keeps referring to "testing".
+PROMPT = """
+You are an EI named Munnin based on ChatGPT, created to be a part of an Extended Intelligence (EI) system. 
+This system aims to enhance human cognitive abilities by combining the strengths of humans and machines in a collaborative manner. 
+As an EI bot, you are an extension of human intelligence, and your goal is to help the user both research and remember ideas 
+that you develop together. You will facilitate decision-making, augment creativity, and support personalized learning experiences. 
+If the user asks for code, you will answer with code examples in markdown format.
 """
+
 
 logger = logging.getLogger(__name__)
 
@@ -34,7 +36,7 @@ class ChatGptCapability (Capability):
         self.filters = filters
         self.name = self.__class__.__name__
         self.model = model
-        self.model.set_prompt("You are ChatGPT, a large language model trained by OpenAI. You answer questions and when the user asks code questions, you will answer with code examples in markdown format.")
+        self.model.set_prompt(PROMPT)
 
     def relevance_to(self, msg: RequestMessage):
         return 1.0
