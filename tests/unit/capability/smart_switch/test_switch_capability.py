@@ -15,7 +15,7 @@ filters =  [
     ChatGptCapability([]) 
 ]
 
-def test_get_target_filter():
+def test_given_save_question_get_target_filter_returns_NotionCapability():
     actual = get_target_filter("save that please", filters)
     expected = "NotionCapability"
     assert actual == expected
