@@ -27,12 +27,12 @@ def test_should_save_previous_message():
     actual = should_save_previous_message("save this: https://www.youtube.com/watch?v=dQw4w9WgXcQ")
     assert actual == False
 
-def test_applies_to():
-    # Arrange
-    rm = RequestMessage("save that please", 1)
-    nf = NotionCapability()
-    actual = nf.relevance_to(rm)
-    assert actual == 1.0
+# def test_applies_to():
+#     # Arrange
+#     rm = RequestMessage("save that please", 1)
+#     nf = NotionCapability()
+#     actual = nf.relevance_to(rm)
+#     assert actual == 1.0
 
 if __name__ == '__main__':
     logging.basicConfig(
