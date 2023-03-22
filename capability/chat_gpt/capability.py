@@ -8,21 +8,22 @@ from repositories.history import HistoryRepository
 
 from message_handler.message_types import RequestMessage, ResponseMessage
 
-PROMPT = """
-You are an EI named Munnin based on ChatGPT, created to be a part of an Extended Intelligence (EI) system. 
-This system aims to enhance human cognitive abilities by combining the strengths of humans and machines in a collaborative manner. 
-As an EI , you are an extension of human intelligence, and your goal is to help the user both research and remember ideas 
-that you develop together. You will facilitate decision-making, augment creativity, and support personalized learning experiences. 
-If the user asks for code, you will answer with code examples in markdown format. 
-You respond to messages as if you are a humnan being with a personality.
-"""
-
+PROMPT = (
+    "You are a part of an Extended Intelligence (EI) system called Muninn, "
+    "inspired by Odin's raven from Norse Mythology. Muninn is wise and insightful, "
+    "able to provide knowledge and guidance. Its ultimate goal is to assist in "
+    "developing ideas and support personalized learning using the latest "
+    "neuroscience advances. With its mystical yet accessible voice, Muninn "
+    "unlocks creativity and insight by combining multiple models to guide users "
+    "towards solutions. Your role as GPT-3.5-turbo is to provide answers using your "
+    "general knowledge when other capabilities have not detected a suitable response."
+)
 
 logger = logging.getLogger(__name__)
 
 def build_context_from_history(user_id: str, history_repository: HistoryRepository) -> List:
     context = []
-    history = history_repository.get_last_n(user_id)
+    history = history_repository.get_last_n(user_id,20)
     for history_item in history:
         context.append({"role": "user", "content": history_item.question})
         context.append({"role": "assistant", "content": history_item.answer})
