@@ -87,6 +87,15 @@ class HistoryRepository(object):
         except Exception as e:
             logger.error(f'Failed to save history item: {e}')
             return None
+        
+    def delete(self, id: str) -> bool:
+        try:
+            query = { "_id": ObjectId(id) }
+            result = self.collection.delete_one(query)
+            return result.deleted_count == 1
+        except Exception as e:
+            logger.error(f'Failed to delete history item: {e}')
+            return False
 
 def build_context_from_history(user_id: int) -> str:
     history_repository = HistoryRepository()
