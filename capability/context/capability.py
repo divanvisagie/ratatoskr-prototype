@@ -8,7 +8,7 @@ from repositories.history import NewHistory, HistoryRepository
 
 logger = create_logger(__name__)
 
-class ContextSavingFilter (Capability):
+class ContextSavingLayer (Capability):
     def __init__(self, filters: List[Capability]):
         super().__init__()
         self.capabilities = filters
