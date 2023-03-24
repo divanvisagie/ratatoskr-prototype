@@ -3,9 +3,10 @@ from typing import List
 import openai
 
 from language_model.base_model import BaseModel
+from log_factory.logger import create_logger
 
 
-logger = logging.getLogger(__name__)
+logger = create_logger(__name__)
 
 class ChatGPTModel (BaseModel):
     def __init__(self):
@@ -17,15 +18,17 @@ class ChatGPTModel (BaseModel):
 
     def set_history(self, history: List):
         self.history = history
+        self.history.reverse() # The history needs to be reversed in order to apply properly
     
     def complete(self, prompt: str) -> str:
+        messages=[
+            self.system_prompt,
+            *self.history,
+            { "role": "user", "content": prompt },
+        ]
         completion =  openai.ChatCompletion.create(
             model="gpt-3.5-turbo",
-            messages=[
-                self.system_prompt,
-                *self.history,
-                { "role": "user", "content": prompt },
-            ]
+            messages=messages,
         )
         return completion.choices[0].message.content
         

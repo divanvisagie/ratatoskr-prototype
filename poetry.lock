@@ -1590,6 +1590,18 @@ dotenv = ["python-dotenv (>=0.10.4)"]
 email = ["email-validator (>=1.0.3)"]
 
 [[package]]
+name = "pykka"
+version = "3.1.1"
+description = "Pykka is a Python implementation of the actor model"
+category = "main"
+optional = false
+python-versions = ">=3.7.0,<4.0.0"
+files = [
+    {file = "pykka-3.1.1-py3-none-any.whl", hash = "sha256:d00de35f719afeedf8d362854d99cee6ed257663bbf7e4789344b77b73d55f28"},
+    {file = "pykka-3.1.1.tar.gz", hash = "sha256:14ce223a55e6d62de6657f9b2b129e6ac785f731eccc5e26059e5254beca3cfb"},
+]
+
+[[package]]
 name = "pymongo"
 version = "4.3.3"
 description = "Python driver for MongoDB <http://www.mongodb.org>"
@@ -2786,4 +2798,4 @@ multidict = ">=4.0"
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10"
-content-hash = "abe85d0a49a07927581845457acc587ec05d119aa8edfb1fde483fb126614dbb"
+content-hash = "19124a975696511bc4e02aeeb1c4bc9a022c9a2a9a254802ec20351f750612d5"

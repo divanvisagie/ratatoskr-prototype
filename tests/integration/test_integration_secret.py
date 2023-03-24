@@ -1,7 +1,8 @@
 import logging
+from log_factory.logger import create_logger
 from repositories.secret import NewSecret, SecretRepository, Secret
 
-logger = logging.getLogger(__name__)
+logger = create_logger(__name__)
 
 def test_save_secret():
     # Arrange

@@ -1,11 +1,7 @@
-import logging
-import os
-import sys
-
 from clients.duckduck_client import DuckDuckGoClient, result_to_markdown
+from log_factory.logger import create_logger
 
-
-logger = logging.getLogger(__name__)
+logger = create_logger(__name__)
 
 def test_result_to_markdown():
     result = {

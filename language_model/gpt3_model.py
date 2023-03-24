@@ -9,7 +9,7 @@ openai.api_key = TELEGRAM_BOT_TOKEN = environ['OPENAI_API_KEY']
 
 text_model = "text-davinci-003"
 
-logger = logging.getLogger(__name__)
+logger = create_logger__name__)
 
 class GPT3CompletionModel (BaseModel):
     def __init__(self):

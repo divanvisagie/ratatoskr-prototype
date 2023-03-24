@@ -35,6 +35,7 @@ def build_filter_list(filters: List[Capability]):
 class SmartSwitchFilter(Capability):
     """Uses response from openai to determine which filter to use"""
     def __init__(self):
+        super().__init__()
         self.filters: List[Capability] = [
             # NotionFilter(),
             DuckDuckGoCapability(),

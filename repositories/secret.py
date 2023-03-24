@@ -4,7 +4,9 @@ from bson import ObjectId
 
 import pymongo
 
-logger = logging.getLogger(__name__)
+from log_factory.logger import create_logger
+
+logger = create_logger(__name__)
 
 class NewSecret (object):
     def __init__(self, user_id, app_id, question, answer):

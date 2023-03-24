@@ -1,24 +1,25 @@
-import logging
-
 from telegram import Update
 from telegram.ext import ContextTypes
+from capability.capability import RelevanceRequest
 from capability.context.capability import ContextSavingFilter
 from capability.duck_duck_go.capability import DuckDuckGoCapability
 from capability.notion.capability import NotionCapability
 
 from capability.chat_gpt.capability import ChatGptCapability
 from capability.smart_switch.capability import SmartSwitchFilter
+from log_factory.logger import create_logger
 from message_handler.message_types import RequestMessage
 from repositories.user import UserRepository
 
-filters = [ContextSavingFilter([
-    NotionCapability(),
-    DuckDuckGoCapability(),
-    SmartSwitchFilter(),
-    ChatGptCapability([])
-])]
+notion_capability = NotionCapability.start()
+duck_duck_go_capability = DuckDuckGoCapability.start()
+smart_switch_filter = SmartSwitchFilter.start()
+chat_gpt_capability = ChatGptCapability.start([])
+context_saving_filter = ContextSavingFilter.start([notion_capability, duck_duck_go_capability, smart_switch_filter, chat_gpt_capability])
 
-logger = logging.getLogger(__name__)
+capabilities = [context_saving_filter]
+
+logger = create_logger(__name__)
 
 async def handle_incoming_telegram_message(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     logger.info(f"Recieved message in context: {context}")
@@ -37,11 +38,11 @@ async def handle_incoming_telegram_message(update: Update, context: ContextTypes
 
     logger.info(f'User found: {user.id}')
     rm = RequestMessage.from_telegram_message(update.message, user.id)
-    for filter in filters:
-        if filter.relevance_to(rm):
+    for filter in capabilities:
+        if filter.ask(RelevanceRequest(rm)):
             logger.info(f'Filter {filter.__class__.__name__} applies to message')
             try:
-                ans = filter.apply(rm)
+                ans = filter.ask(rm)
                 await update.message.reply_text(text=ans.text, parse_mode='Markdown')
                 return
             except Exception as e:

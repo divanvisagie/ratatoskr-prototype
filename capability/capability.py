@@ -1,9 +1,15 @@
 from abc import ABC, abstractmethod
-from typing import List, Tuple
+from typing import Any, List, Tuple
+
+import pykka
 
 from message_handler.message_types import RequestMessage, ResponseMessage
 
-class Capability (ABC):
+class RelevanceRequest(object):
+    def __init__(self, message: RequestMessage):
+        self.message = message
+
+class Capability (pykka.ThreadingActor, ABC):
     """Defines the interface for a Capability"""
     description = "Not Implemented" # If not implemented then will be ignored by fallback mechanism
     
@@ -15,6 +21,14 @@ class Capability (ABC):
     def apply(self, msg: RequestMessage) -> ResponseMessage:
         """Defines the logic to process the message"""
         pass
+
+    def on_receive(self, message: Any) -> Any:
+        if isinstance(message, RequestMessage):
+            return self.apply(message)
+        elif isinstance(message, RelevanceRequest):
+            return self.relevance_to(message.message)
+        else:
+            raise Exception("Unknown message type")
 
 
 def find_most_applicable(filters: List[Capability], message: RequestMessage) -> Tuple[Capability, float]:

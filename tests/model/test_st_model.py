@@ -1,9 +1,10 @@
 import logging
 
 from language_model.search_term_generator.named_model import QAPair, SearchTermGenerator
+from log_factory.logger import create_logger
 
 
-logger = logging.getLogger(__name__)
+logger = create_logger(__name__)
 
 def test_search_term_generator_model():
     # Arrange
@@ -16,9 +17,3 @@ def test_search_term_generator_model():
 
     # Assert
     assert actual == "Akka Documentation"
-
-
-if __name__ == '__main__':
-    logging.basicConfig(
-        format="%(asctime)s - %(name)s - %(levelname)s - %(message)s", level=logging.INFO
-    )

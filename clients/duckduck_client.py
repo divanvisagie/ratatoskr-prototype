@@ -1,8 +1,9 @@
-import logging
 from urllib.parse import quote
-from duckduckgo_search import ddg  
+from duckduckgo_search import ddg
 
-logger = logging.getLogger(__name__)
+from log_factory.logger import create_logger  
+
+logger = create_logger(__name__)
 
 def sentence_to_query(sentence: str) -> str:
     """Convert a sentence to a query for DuckDuckGo."""

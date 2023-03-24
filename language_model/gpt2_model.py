@@ -4,15 +4,15 @@ import torch
 from transformers import set_seed, GPT2LMHeadModel, GPT2Tokenizer
 
 from language_model.base_model import BaseModel
+from log_factory.logger import create_logger
 
 
-logger = logging.getLogger(__name__)
+logger = create_logger(__name__)
 
 class GPT2Model (BaseModel):
     def __init__(self):
         self.model = GPT2LMHeadModel.from_pretrained('gpt2')
         self.tokenizer = GPT2Tokenizer.from_pretrained('gpt2')
-        self.logger = logging.getLogger(__name__)
         set_seed(32)
     
     def complete(self, question: str) -> str:
@@ -25,8 +25,5 @@ class GPT2Model (BaseModel):
 
 
 if __name__ == '__main__':
-    logging.basicConfig(
-        format="%(asctime)s - %(name)s - %(levelname)s - %(message)s", level=logging.INFO
-    )
     model = GPT2Model()
     actual = model.complete("Bot: Hello, how can I help you?")

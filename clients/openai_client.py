@@ -2,12 +2,14 @@ import logging
 import openai
 from os import environ
 
+from log_factory.logger import create_logger
+
 openai.api_key = TELEGRAM_BOT_TOKEN = environ['OPENAI_API_KEY']
 
 text_model = "text-davinci-003"
 code_model = "code-davinci-002"
 
-logger = logging.getLogger(__name__)
+logger = create_logger(__name__)
 
 HUMAN_STOP_TOKEN = "User"
 AI_STOP_TOKEN = "Bot"
