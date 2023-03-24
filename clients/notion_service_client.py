@@ -5,10 +5,12 @@ import datetime
 
 from notion_client import Client
 
+from log_factory.logger import create_logger
+
 database_id = os.environ.get('NOTION_JOURNAL_DB')
 notion = Client(auth=os.environ.get('NOTION_TOKEN'))
 
-logger = logging.getLogger(__name__)
+logger = create_logger(__name__)
 
 def get_day_of_week() -> str:
     dow =  datetime.datetime.now().strftime('%A')

@@ -6,8 +6,10 @@ import logging
 from datasets import load_dataset
 from transformers import AutoTokenizer, DefaultDataCollator, AutoModelForQuestionAnswering, TrainingArguments, Trainer
 
+from log_factory.logger import create_logger
 
-logger = logging.getLogger(__name__)
+
+logger = create_logger(__name__)
 
 squad = load_dataset('squad',split="train[:5000]")
 

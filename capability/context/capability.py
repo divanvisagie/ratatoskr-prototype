@@ -1,11 +1,12 @@
 import logging
 from typing import List
 from capability.capability import Capability
+from log_factory.logger import create_logger
 
 from message_handler.message_types import RequestMessage, ResponseMessage
 from repositories.history import NewHistory, HistoryRepository
 
-logger = logging.getLogger(__name__)
+logger = create_logger(__name__)
 
 class ContextSavingFilter (Capability):
     def __init__(self, filters: List[Capability]):

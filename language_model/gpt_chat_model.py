@@ -3,9 +3,10 @@ from typing import List
 import openai
 
 from language_model.base_model import BaseModel
+from log_factory.logger import create_logger
 
 
-logger = logging.getLogger(__name__)
+logger = create_logger(__name__)
 
 class ChatGPTModel (BaseModel):
     def __init__(self):

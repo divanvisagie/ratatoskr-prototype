@@ -3,7 +3,7 @@ import logging
 from language_model.search_term_generator.named_model import QAPair, SearchTermGenerator
 
 
-logger = logging.getLogger(__name__)
+logger = create_logger__name__)
 
 def test_search_term_generator_model():
     # Arrange

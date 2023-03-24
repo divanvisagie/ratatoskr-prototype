@@ -14,7 +14,7 @@ async def ping(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
 logging.basicConfig(
     format="%(asctime)s - %(name)s - %(levelname)s - %(message)s", level=logging.INFO
 )
-logger = logging.getLogger(__name__)
+logger = create_logger__name__)
 
 def main():
     app = ApplicationBuilder().token(TELEGRAM_BOT_TOKEN).build()

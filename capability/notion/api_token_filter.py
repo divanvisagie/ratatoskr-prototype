@@ -3,11 +3,12 @@ from typing import Callable
 import spacy
 
 from capability.capability import Capability
+from log_factory.logger import create_logger
 from message_handler.message_types import RequestMessage, ResponseMessage
 from repositories.history import HistoryRepository
 from repositories.secret import Secret, SecretRepository
 
-logger = logging.getLogger(__name__)
+logger = create_logger(__name__)
 nlp = spacy.load("en_core_web_sm")
 
 class MissingTokenFilter (Capability):

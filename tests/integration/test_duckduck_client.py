@@ -5,7 +5,7 @@ import sys
 from clients.duckduck_client import DuckDuckGoClient, result_to_markdown
 
 
-logger = logging.getLogger(__name__)
+logger = create_logger__name__)
 
 def test_result_to_markdown():
     result = {

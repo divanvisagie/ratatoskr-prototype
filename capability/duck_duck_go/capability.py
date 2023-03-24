@@ -5,13 +5,14 @@ from capability.capability import Capability
 from clients.duckduck_client import DuckDuckGoClient
 from clients.openai_client import get_text_answer, AI_STOP_TOKEN, HUMAN_STOP_TOKEN
 from clients.spacy_client import print_token_details
+from log_factory.logger import create_logger
 from message_handler.message_types import RequestMessage, ResponseMessage
 from repositories.history import NewHistory, HistoryRepository
 
 
 nlp = spacy.load("en_core_web_sm")
 
-logger = logging.getLogger(__name__)
+logger = create_logger(__name__)
 
 def wrap_history(last_question: NewHistory, current_question: str):
     prompt = "Based on the following context, write a search engine query, output only the query itself:"

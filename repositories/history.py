@@ -1,13 +1,13 @@
 import datetime
 import json
-import logging
 from typing import List
 from bson import ObjectId
 import pymongo
 
 from language_model.base_model import AI_STOP_TOKEN, HUMAN_STOP_TOKEN
+from log_factory.logger import create_logger
 
-logger = logging.getLogger(__name__)
+logger = create_logger(__name__)
 
 class NewHistory ():
     def __init__(self, user_id: str, question: str, answer: str, responder: str = None):

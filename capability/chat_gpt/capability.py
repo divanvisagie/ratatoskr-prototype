@@ -4,6 +4,7 @@ from capability.duck_duck_go.capability import DuckDuckGoCapability
 
 from capability.capability import Capability, find_most_applicable
 from language_model.gpt_chat_model import ChatGPTModel
+from log_factory.logger import create_logger
 from repositories.history import HistoryRepository
 
 from message_handler.message_types import RequestMessage, ResponseMessage
@@ -19,7 +20,7 @@ PROMPT = (
     "general knowledge when other capabilities have not detected a suitable response."
 )
 
-logger = logging.getLogger(__name__)
+logger = create_logger(__name__)
 
 def build_context_from_history(user_id: str, history_repository: HistoryRepository) -> List:
     context = []

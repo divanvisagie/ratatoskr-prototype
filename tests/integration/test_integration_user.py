@@ -1,7 +1,6 @@
 import logging
 from repositories.user import NewUser, UserRepository
 
-logger = logging.getLogger(__name__)
 
 def test_get_by_id():
     """Given a user id, return the user"""

@@ -1,9 +1,10 @@
-import logging
 import spacy
 
 from spacy.tokens import Token
 
-logger = logging.getLogger(__name__)
+from log_factory.logger import create_logger
+
+logger = create_logger(__name__)
 
 # Load the English model
 nlp = spacy.load("en_core_web_sm")

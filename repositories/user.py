@@ -1,8 +1,9 @@
-import logging
 import json
 import pymongo
 
-logger = logging.getLogger(__name__)
+from log_factory.logger import create_logger
+
+logger = create_logger(__name__)
 
 class NewUser (object):
     def __init__(self, telegram_username, access_level):

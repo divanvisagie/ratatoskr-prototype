@@ -6,6 +6,7 @@ from capability.capability import Capability, find_most_applicable
 from clients.notion_service_client import add_entry_to_todays_page
 from capability.notion.api_token_filter import MissingTokenFilter
 from capability.notion.model import save_requested
+from log_factory.logger import create_logger
 from message_handler.message_types import RequestMessage, ResponseMessage
 from repositories.history import HistoryRepository
 from repositories.secret import SecretRepository
@@ -31,7 +32,7 @@ JOURNAL_DATABASE_REQUEST = "JOURNAL_DATABASE_REQUEST"
 
 API_TOKEN_REQUEST = "API_TOKEN_REQUEST"
 
-logger = logging.getLogger(__name__)
+logger = create_logger(__name__)
 nlp = spacy.load("en_core_web_sm")
 
 def user_has_token(user_id: int, app_id: int, token: str) -> bool:

@@ -1,5 +1,3 @@
-import logging
-
 from telegram import Update
 from telegram.ext import ContextTypes
 from capability.context.capability import ContextSavingFilter
@@ -8,6 +6,7 @@ from capability.notion.capability import NotionCapability
 
 from capability.chat_gpt.capability import ChatGptCapability
 from capability.smart_switch.capability import SmartSwitchFilter
+from log_factory.logger import create_logger
 from message_handler.message_types import RequestMessage
 from repositories.user import UserRepository
 
@@ -18,7 +17,7 @@ filters = [ContextSavingFilter([
     ChatGptCapability([])
 ])]
 
-logger = logging.getLogger(__name__)
+logger = create_logger(__name__)
 
 async def handle_incoming_telegram_message(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     logger.info(f"Recieved message in context: {context}")

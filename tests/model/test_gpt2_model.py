@@ -3,7 +3,7 @@ from functools import partial
 
 from language_model.gpt2_model import GPT2Model
 
-logger = logging.getLogger(__name__)
+logger = create_logger__name__)
 
 def get_completion_with_model(model, question: str) -> str:
     return model.complete(question)
