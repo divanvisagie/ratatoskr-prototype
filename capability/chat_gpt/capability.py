@@ -1,5 +1,7 @@
 import logging
 from typing import List
+
+import pykka
 from capability.duck_duck_go.capability import DuckDuckGoCapability
 
 from capability.capability import Capability, find_most_applicable
@@ -35,6 +37,7 @@ class ChatGptCapability (Capability):
     description = "Will respond naturally to a users prompt but cannot search the web for links. Good for opinionated responses and summarising."
 
     def __init__(self, filters: List[Capability], model: ChatGPTModel = ChatGPTModel(), history_repository: HistoryRepository = HistoryRepository()):
+        super().__init__()
         self.history_repository = history_repository
         self.filters = filters
         self.name = self.__class__.__name__

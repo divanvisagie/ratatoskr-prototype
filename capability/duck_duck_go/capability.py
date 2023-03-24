@@ -41,6 +41,7 @@ class DuckDuckGoCapability(Capability):
     description = "Performs a search web on behalf of the user and returns the result, good for showing the user things, not good for summarising."
 
     def __init__(self):
+        super().__init__()
         self.ddg_client = DuckDuckGoClient()
         self.history_repository = HistoryRepository()
 

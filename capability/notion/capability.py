@@ -67,6 +67,7 @@ class NotionCapability (Capability):
     description = "Will save the last message the bot returned to notion for the user, should only be used if the user explicitly asks to save"
 
     def __init__(self):
+        super().__init__()
         self.history_repository = HistoryRepository()
         self.filters = [
             MissingTokenFilter(API_TOKEN_REQUEST, TOKEN_REQUEST_MESSAGE, extract_token_from_message),
