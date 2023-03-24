@@ -2,8 +2,9 @@ import logging
 from functools import partial
 
 from language_model.gpt2_model import GPT2Model
+from log_factory.logger import create_logger
 
-logger = create_logger__name__)
+logger = create_logger(__name__)
 
 def get_completion_with_model(model, question: str) -> str:
     return model.complete(question)
@@ -20,9 +21,3 @@ def test_gpt2_model():
 
     actual = complete(chat_prompt)
     logger.info(f"Actual: {actual}")
-
-if __name__ == '__main__':
-    logging.basicConfig(
-        format="%(asctime)s - %(name)s - %(levelname)s - %(message)s", level=logging.INFO
-    )
-    test_gpt2_model()

@@ -3,13 +3,15 @@ from transformers import pipeline, set_seed, GPT2LMHeadModel, GPT2Tokenizer
 
 from log_factory.logger import create_logger
 
+logger = create_logger(__name__)
+
 class NamedModel(object):
     def __init__(self, model_name: str):
         self.model = pipeline('text-generation', model=model_name, do_sample=True)
 
     def ask_question(self, question: str) -> str:
         response_text = self.model(question, max_length=250, num_beams=1, num_return_sequences=1)[0]['generated_text']
-        self.logger.info(f"Response text: {response_text}")
+        logger.info(f"Response text: {response_text}")
         response_text = response_text.split(question)[1] # extract the bot response from generated text
         response_text = response_text.split("Question:")[0] # only grab until the next human input
         return response_text.strip()

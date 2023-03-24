@@ -1,7 +1,8 @@
 import logging
+from log_factory.logger import create_logger
 from repositories.history import NewHistory, HistoryRepository
 
-logger = create_logger__name__)
+logger = create_logger(__name__)
 
 MOCK_USER_ID = "fake_user_id"
 MOCK_QUESTION = "What is the name of the actor library for scala?"

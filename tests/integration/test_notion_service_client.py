@@ -4,8 +4,9 @@ import sys
 import logging
 
 from clients import notion_service_client
+from log_factory.logger import create_logger
 
-logger = create_logger__name__)
+logger = create_logger(__name__)
 
 def cleanup_test_pages():
     """Clean up any pages that were created by this test"""
