@@ -37,7 +37,6 @@ def asks_for_article_or_doc(message: str):
     return False
 
 class DuckDuckGoCapability(Capability):
-
     description = "Performs a search web on behalf of the user and returns the result, good for showing the user things, not good for summarising."
 
     def __init__(self):
@@ -52,23 +51,24 @@ class DuckDuckGoCapability(Capability):
             return 0.0
 
     def apply(self, msg: RequestMessage) -> ResponseMessage:
-        try:
-            history = get_history(self.history_repository, msg.user_id)
-            wrapped = wrap_history(history, msg.text)
-            logger.info(f"Asking OpenAI: {wrapped}")
+        with msg.tracer.start_as_current_span(f'{self.__class__.__name__}.apply'):
+            try:
+                history = get_history(self.history_repository, msg.user_id)
+                wrapped = wrap_history(history, msg.text)
+                logger.info(f"Asking OpenAI: {wrapped}")
 
-            ddg_query_string = get_text_answer(wrapped)
-            logger.info(f"Query: {ddg_query_string}")
-            answer = self.ddg_client.search(ddg_query_string)
+                ddg_query_string = get_text_answer(wrapped)
+                logger.info(f"Query: {ddg_query_string}")
+                answer = self.ddg_client.search(ddg_query_string)
 
-            # If answer is empty string
-            if not answer:
-                 # throw an exception
-                answer = get_text_answer(f'The user has asked you to search for the term "{wrapped}" but nothing has been found on DuckDuckGo. Please provide a response.')
+                # If answer is empty string
+                if not answer:
+                    # throw an exception
+                    answer = get_text_answer(f'The user has asked you to search for the term "{wrapped}" but nothing has been found on DuckDuckGo. Please provide a response.')
+                
             
-           
-            return ResponseMessage(answer, "DuckDuckGo")
-        except Exception as e:
-            logger.error(f'Failed to search the web for that topic {e}')
-            answer = "I don't know, I tried to search the web but I couldn't find anything"
-            return ResponseMessage(answer, "DuckDuckGo")
+                return ResponseMessage(answer, "DuckDuckGo")
+            except Exception as e:
+                logger.error(f'Failed to search the web for that topic {e}')
+                answer = "I don't know, I tried to search the web but I couldn't find anything"
+                return ResponseMessage(answer, "DuckDuckGo")

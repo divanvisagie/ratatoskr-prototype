@@ -28,7 +28,7 @@ class TelegramMessageHandler:
         self.tracer = tracer
 
     async def handle_incoming_telegram_message(self, update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-        with self.tracer.start_as_current_span(f'Processing Telegram message') as parent_span:
+        with self.tracer.start_as_current_span(f'TelegramMessageHandler.handle_incoming_telegram_message') as span:
             logger.info(f"Recieved message in context: {context}")
             """Echo the user message."""
             if update.message.reply_to_message is not None:
@@ -43,7 +43,7 @@ class TelegramMessageHandler:
                 return
 
             logger.info(f'User found: {user.id}')
-            request_message = RequestMessage.from_telegram_message(update.message, user.id, self.tracer, parent_span)
+            request_message = RequestMessage.from_telegram_message(update.message, user.id, self.tracer)
         
             if context_saving_layer.relevance_to(request_message):
                 logger.info(f'Filter {context_saving_layer.__class__.__name__} applies to message')
@@ -58,8 +58,5 @@ class TelegramMessageHandler:
             await update.message.reply_text('Could not process your message.')
 
 async def handle_message_with_capability(update: Update, req: RequestMessage, capability: Capability):
-    # with req.parent_span.start_as_current_span(f'Forwarding message through capability {capability.__class__.__name__}'):
-    with req.tracer.start_as_current_span(f'Forwarding message through context saving layer') as parent_span:
-        req.parent_span = parent_span
-        ans = capability.process(req)
-        await update.message.reply_text(text=ans.text, parse_mode='Markdown')
+    ans = capability.apply(req)
+    await update.message.reply_text(text=ans.text, parse_mode='Markdown')

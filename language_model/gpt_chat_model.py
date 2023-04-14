@@ -1,18 +1,15 @@
-import logging
 from typing import List
 import openai
 
 from language_model.base_model import BaseModel
 from log_factory.logger import create_logger
 
+from opentelemetry.trace import Tracer
+
 
 logger = create_logger(__name__)
 
 class ChatGPTModel (BaseModel):
-    def __init__(self):
-        # self.system_prompt = { "role": "system", "content": system_prompt }
-        pass
-
     def set_prompt(self, prompt: str):
         self.system_prompt = { "role": "system", "content": prompt }
 
@@ -20,7 +17,12 @@ class ChatGPTModel (BaseModel):
         self.history = history
         self.history.reverse() # The history needs to be reversed in order to apply properly
     
-    def complete(self, prompt: str) -> str:
+    def complete(self, prompt: str, tracer: Tracer = None) -> str:
+        if tracer is not None:
+            logger.info(f'Using tracer {tracer}')
+            span = tracer.start_as_current_span('openai.ChatCompletion')
+
+        # with tracer.start_as_current_span('openai.ChatCompletion'):
         messages=[
             self.system_prompt,
             *self.history,
@@ -30,7 +32,9 @@ class ChatGPTModel (BaseModel):
             model="gpt-3.5-turbo",
             messages=messages,
         )
+
         return completion.choices[0].message.content
+    
         
 if __name__ == "__main__":
     model = ChatGPTModel("You are ChatGPT, a large language model trained by OpenAI. You answer questions and when the user asks code questions, you will answer with code examples in markdown format.")

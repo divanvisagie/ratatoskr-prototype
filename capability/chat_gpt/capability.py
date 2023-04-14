@@ -48,21 +48,22 @@ class ChatGptCapability (Capability):
         return 1.0
 
     def apply(self, msg: RequestMessage) -> ResponseMessage:
-        logger.info(f'{self.__class__.__name__} Processing message: {msg.text}')
+        with msg.tracer.start_as_current_span(f'{self.__class__.__name__}.apply'):
+            logger.info(f'{self.__class__.__name__} Processing message: {msg.text}')
 
-        most_applicable, confidence = find_most_applicable(self.filters, msg)
-        if confidence > 0.9:
-            logger.info(f'Found a more applicable sub filter: {most_applicable.__class__.__name__} with confidence: {confidence}')
-            return most_applicable.apply(msg)
-        
-        context = build_context_from_history(msg.user_id, self.history_repository)
-        self.model.set_history(context)
-        answer = self.model.complete(msg.text)
+            most_applicable, confidence = find_most_applicable(self.filters, msg)
+            if confidence > 0.9:
+                logger.info(f'Found a more applicable sub filter: {most_applicable.__class__.__name__} with confidence: {confidence}')
+                return most_applicable.apply(msg)
+            
+            context = build_context_from_history(msg.user_id, self.history_repository)
+            self.model.set_history(context)
+            answer = self.model.complete(msg.text, msg.tracer)
 
-        ddg = DuckDuckGoCapability()
-        ddg_test_message = RequestMessage(answer, msg.user_id)
-        if ddg.relevance_to(ddg_test_message):
-            logger.info(f'OpenAI returned a question, sending to DuckDuckGo\nQuestion: {answer}')
-            return ddg.apply(msg.text)
+            ddg = DuckDuckGoCapability()
+            ddg_test_message = RequestMessage(answer, msg.user_id)
+            if ddg.relevance_to(ddg_test_message):
+                logger.info(f'OpenAI returned a question, sending to DuckDuckGo\nQuestion: {answer}')
+                return ddg.apply(msg.text)
 
-        return ResponseMessage(answer, responding_application=self.name)
+            return ResponseMessage(answer, responding_application=self.name)

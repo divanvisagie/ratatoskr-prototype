@@ -1,7 +1,6 @@
 from abc import ABC, abstractmethod
 from typing import Any, List, Tuple
 
-
 from message_handler.message_types import RequestMessage, ResponseMessage
 
 class RelevanceRequest(object):
@@ -16,18 +15,9 @@ class Capability (ABC):
         """Checks how relevant the capability is to the message"""
         return 0.00
     
-    @abstractmethod
     def apply(self, msg: RequestMessage) -> ResponseMessage:
         """Defines the logic to process the message"""
         pass
-
-    def process(self, message: Any) -> Any:
-        if isinstance(message, RequestMessage):
-            return self.apply(message)
-        elif isinstance(message, RelevanceRequest):
-            return self.relevance_to(message.message)
-        else:
-            raise Exception("Unknown message type")
 
 
 def find_most_applicable(filters: List[Capability], message: RequestMessage) -> Tuple[Capability, float]:

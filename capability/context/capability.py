@@ -1,12 +1,9 @@
-import logging
 from typing import List
-from capability.capability import Capability, RelevanceRequest
+from capability.capability import Capability 
 from log_factory.logger import create_logger
 
 from message_handler.message_types import RequestMessage, ResponseMessage
 from repositories.history import NewHistory, HistoryRepository
-
-from opentelemetry.trace import Link
 
 logger = create_logger(__name__)
 
@@ -20,18 +17,14 @@ class ContextSavingLayer (Capability):
         return True
 
     def apply(self, msg: RequestMessage):
-        ctx = msg.parent_span.get_span_context()
-        link = Link(ctx)
-
-        with msg.tracer.start_as_current_span(f'{self.__class__.__name__} Processing message', links=[link]) as parent_span:
-            msg.parent_span = parent_span
+        with msg.tracer.start_as_current_span(f'{self.__class__.__name__} Processing message'):
             user_query = msg.text
             logger.info(f'{self.__class__.__name__} Processing message: {user_query}')
             for capability in self.capabilities:
                 logger.info(f'Checking if filter {capability.__class__.__name__} applies')
                 if capability.relevance_to(msg):
                     logger.info(f'Applying filter {capability.__class__.__name__}')
-                    response =  capability.process(msg)
+                    response =  capability.apply(msg)
                     app_response = response.app_response if response.app_response is not None else response.text
                     try: 
                         self.history_repository.save(NewHistory(msg.user_id, question=user_query, answer=app_response, responder=response.responding_application))
