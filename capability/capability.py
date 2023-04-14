@@ -1,7 +1,6 @@
 from abc import ABC, abstractmethod
 from typing import Any, List, Tuple
 
-import pykka
 
 from message_handler.message_types import RequestMessage, ResponseMessage
 
@@ -9,7 +8,7 @@ class RelevanceRequest(object):
     def __init__(self, message: RequestMessage):
         self.message = message
 
-class Capability (pykka.ThreadingActor, ABC):
+class Capability (ABC):
     """Defines the interface for a Capability"""
     description = "Not Implemented" # If not implemented then will be ignored by fallback mechanism
     
@@ -22,7 +21,7 @@ class Capability (pykka.ThreadingActor, ABC):
         """Defines the logic to process the message"""
         pass
 
-    def on_receive(self, message: Any) -> Any:
+    def process(self, message: Any) -> Any:
         if isinstance(message, RequestMessage):
             return self.apply(message)
         elif isinstance(message, RelevanceRequest):
