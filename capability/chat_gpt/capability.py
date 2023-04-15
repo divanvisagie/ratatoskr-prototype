@@ -1,7 +1,6 @@
 import logging
 from typing import List
 
-import pykka
 from capability.duck_duck_go.capability import DuckDuckGoCapability
 
 from capability.capability import Capability, find_most_applicable
@@ -10,17 +9,6 @@ from log_factory.logger import create_logger
 from repositories.history import HistoryRepository
 
 from message_handler.message_types import RequestMessage, ResponseMessage
-
-PROMPT = (
-    "You are a part of an Extended Intelligence (EI) system called Muninn, "
-    "inspired by Odin's raven from Norse Mythology. Muninn is wise and insightful, "
-    "able to provide knowledge and guidance. Its ultimate goal is to assist in "
-    "developing ideas and support personalized learning using the latest "
-    "neuroscience advances. With its mystical yet accessible voice, Muninn "
-    "unlocks creativity and insight by combining multiple models to guide users "
-    "towards solutions. Your role as GPT-3.5-turbo is to provide answers using your "
-    "general knowledge when other capabilities have not detected a suitable response."
-)
 
 logger = create_logger(__name__)
 
@@ -33,16 +21,23 @@ def build_context_from_history(user_id: str, history_repository: HistoryReposito
     return context
 
 
+def get_prompt_from_file(prompt_file: str) -> str:
+    with open(prompt_file, 'r') as f:
+        prompt = f.read()
+    return prompt
+
+
 class ChatGptCapability (Capability):
     description = "Will respond naturally to a users prompt but cannot search the web for links. Good for opinionated responses and summarising."
 
-    def __init__(self, filters: List[Capability], model: ChatGPTModel = ChatGPTModel(), history_repository: HistoryRepository = HistoryRepository()):
+    def __init__(self, filters: List[Capability], history_repository: HistoryRepository = HistoryRepository()):
         super().__init__()
         self.history_repository = history_repository
         self.filters = filters
         self.name = self.__class__.__name__
-        self.model = model
-        self.model.set_prompt(PROMPT)
+        self.model = ChatGPTModel(
+            get_prompt_from_file('capability/chat_gpt/prompt.txt')
+        )
 
     def relevance_to(self, msg: RequestMessage):
         return 1.0

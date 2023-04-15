@@ -1,15 +1,15 @@
-
-import logging
-from os import environ
 import openai
+
+from os import environ
 from clients.openai_client import AI_STOP_TOKEN
 from base_model import HUMAN_STOP_TOKEN, BaseModel
+from log_factory.logger import create_logger
 
 openai.api_key = TELEGRAM_BOT_TOKEN = environ['OPENAI_API_KEY']
 
 text_model = "text-davinci-003"
 
-logger = create_logger__name__)
+logger = create_logger(__name__)
 
 class GPT3CompletionModel (BaseModel):
     def __init__(self):

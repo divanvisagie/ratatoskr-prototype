@@ -1,12 +1,19 @@
 import logging
 from transformers import pipeline
 from language_model.base_model import HUMAN_STOP_TOKEN, BaseModel
+from log_factory.logger import create_logger
 
 
 class NamedModel(BaseModel):
     def __init__(self, model_name: str):
-        self.model = pipeline('text-generation', model=model_name, do_sample=True)
-        self.logger = create_logger__name__)
+        self.model = pipeline(
+            'text-generation', 
+            trust_remote_code=True ,
+            model=model_name, 
+            do_sample=True,
+            device=0,
+        )
+        self.logger = create_logger(__name__)
 
     def complete(self, question: str) -> str:
         response_text = self.model(question, max_length=1024, num_beams=1, num_return_sequences=1)[0]['generated_text']

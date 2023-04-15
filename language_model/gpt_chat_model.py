@@ -1,6 +1,6 @@
-from typing import List
 import openai
 
+from typing import List
 from language_model.base_model import BaseModel
 from log_factory.logger import create_logger
 
@@ -10,6 +10,10 @@ from opentelemetry.trace import Tracer
 logger = create_logger(__name__)
 
 class ChatGPTModel (BaseModel):
+    def __init__(self, prompt: str):
+        self.system_prompt = { "role": "system", "content": prompt }
+        self.history = []
+
     def set_prompt(self, prompt: str):
         self.system_prompt = { "role": "system", "content": prompt }
 
@@ -20,7 +24,7 @@ class ChatGPTModel (BaseModel):
     def complete(self, prompt: str, tracer: Tracer = None) -> str:
         if tracer is not None:
             logger.info(f'Using tracer {tracer}')
-            span = tracer.start_as_current_span('openai.ChatCompletion')
+            tracer.start_as_current_span('openai.ChatCompletion')
 
         # with tracer.start_as_current_span('openai.ChatCompletion'):
         messages=[
