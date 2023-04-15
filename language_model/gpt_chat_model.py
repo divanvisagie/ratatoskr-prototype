@@ -21,12 +21,7 @@ class ChatGPTModel (BaseModel):
         self.history = history
         self.history.reverse() # The history needs to be reversed in order to apply properly
     
-    def complete(self, prompt: str, tracer: Tracer = None) -> str:
-        if tracer is not None:
-            logger.info(f'Using tracer {tracer}')
-            tracer.start_as_current_span('openai.ChatCompletion')
-
-        # with tracer.start_as_current_span('openai.ChatCompletion'):
+    def complete(self, prompt: str) -> str:
         messages=[
             self.system_prompt,
             *self.history,

@@ -22,7 +22,7 @@ def wrap_history(last_question: NewHistory, current_question: str):
     return wrapped
 
 def get_history(history_repository: HistoryRepository, user_id: str ) -> str:
-    history = history_repository.get_by_id(user_id, 1)[0]
+    history = history_repository.get_by_id(user_id)[0]
     return history
 
 def asks_for_article_or_doc(message: str):
@@ -70,5 +70,7 @@ class DuckDuckGoCapability(Capability):
                 return ResponseMessage(answer, "DuckDuckGo")
             except Exception as e:
                 logger.error(f'Failed to search the web for that topic {e}')
+                raise e
+            finally:
                 answer = "I don't know, I tried to search the web but I couldn't find anything"
                 return ResponseMessage(answer, "DuckDuckGo")

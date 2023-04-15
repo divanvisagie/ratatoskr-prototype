@@ -30,7 +30,6 @@ class DuckDuckGoClient():
         try:
             keywords = search_query
             results = ddg(keywords, region='wt-wt', safesearch='On', time='y')
-            #logger.info(f"Got answer from DuckDuckGo: {results}")
 
             count = 0
             result_message = ""

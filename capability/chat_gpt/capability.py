@@ -53,12 +53,12 @@ class ChatGptCapability (Capability):
             
             context = build_context_from_history(msg.user_id, self.history_repository)
             self.model.set_history(context)
-            answer = self.model.complete(msg.text, msg.tracer)
+            answer = self.model.complete(msg.text)
 
             ddg = DuckDuckGoCapability()
             ddg_test_message = RequestMessage(answer, msg.user_id)
             if ddg.relevance_to(ddg_test_message):
                 logger.info(f'OpenAI returned a question, sending to DuckDuckGo\nQuestion: {answer}')
-                return ddg.apply(msg.text)
+                return ddg.apply(msg)
 
             return ResponseMessage(answer, responding_application=self.name)
