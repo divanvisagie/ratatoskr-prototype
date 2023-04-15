@@ -4,6 +4,7 @@ Muninn is an assistant that brings together multiple organizational, search, and
 
 ## Developer Setup
 
+
 The project uses [Poetry](https://python-poetry.org/docs/) to manage dependencies
 
 To set up a Python environment for Muninn, please follow these steps:
@@ -17,6 +18,26 @@ Linux/MacOS
 ```bash
 setup_dev.sh
 ```
+
+#### Prerequisites
+Install pytorch into the pip environment based on your [Compute Platform](https://pytorch.org/get-started/locally/)
+
+##### GPU
+```
+pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118
+```
+
+##### CPU
+```
+pip3 install torch torchvision torchaudio
+```
+
+##### Set transformers cache location
+To set the huggingface cache location, you can set the environment variable `TRANSFORMERS_CACHE` to the location you want to use. For example, on Windows, you can use the following command to set the cache location to `D:\Models` in the environment variables section of the system properties, or in your `.bashrc` file on Linux/MacOS:
+```sh
+TRANSFORMERS_CACHE=D:/Models
+```
+
 
 ### Database
 ```sh
